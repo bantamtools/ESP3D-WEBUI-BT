@@ -33,7 +33,7 @@
 #  - Running GCode - or anything that involves making FluidNC do any motion things
 # But you can load the UI into your browser and do file downloads and whatnot
 
-proxy = True
+proxy = False
 
 import asyncio
 import os
@@ -329,11 +329,15 @@ def do_get_file(filename):
     if filename.startswith('SD/'):
         filename = filename[3:]
         return send_from_directory(os.path.join(test_files, 'sd'), filename)
-    return send_from_directory(os.path.join(test_files, 'localfs'), filename)
+    return send_from_directory('dist', filename)
 
 @app.route('/', methods=['GET'])
 def index():
     return send_from_directory('dist', 'index.html')
+
+@app.route('/', methods=['GET'])
+def styles():
+    return send_from_directory('dist','styles.css')
 
 ### Websocket stuff
 
