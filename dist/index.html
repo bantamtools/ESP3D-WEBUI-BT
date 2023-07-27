@@ -14,7 +14,7 @@
         <script>var fw_version = "";</script>
         <script>var primary_sd = "/ext/";</script>
         <script>var secondary_sd = "/sd/";</script>
-        <link rel="stylesheet" href="styles.css">
+        <link rel="stylesheet" href="styles.css" inline>
     </head>
 
     <body>
@@ -88,7 +88,7 @@
                             </g>
                         </svg>
                         <span translate>Bantam Tools Plotter</span></button> <button
-                        style="display: none;" class="tablinks"
+                        style="display: flex;" class="tablinks"
                         onclick="opentab(event, 'tablettab', 'mainuitabscontent', 'mainuitablinks')"
                         id="tablettablink"><span>Tablet</span></button>
                 </div>
@@ -624,7 +624,7 @@
                                             onclick="SendZerocommand(grblzerocmd)">&Oslash;<span
                                                 style="font-size:8px"
                                                 id="zero_xyz_btn_txt">XYZ</span></button></div><br>
-                                    <div class="position-container" style="display: none;"
+                                    <div class="position-container" style="display: flex;"
                                         id="positions_labels">
                                         <div class="position_text">
                                             <table>
@@ -3734,7 +3734,7 @@
             </div><!-- /UIdisabled content -->
         </div><!-- /UIdisabled Modal -->
         <!-- / template -->
-        <script type="text/javascript" src="script.js">
+        <script type="text/javascript" src="script.js" inline>
           alert("Loading script.js");
     </script>
     </body>
