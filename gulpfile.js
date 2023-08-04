@@ -4,7 +4,6 @@ const uglify = require('gulp-uglify');
 const htmlmin = require('gulp-htmlmin');
 const gzip = require('gulp-gzip');
 const inlineSource = require('gulp-inline-source');
-const replace = require('gulp-replace');
 
 // Copy original files to a temporary directory
 function copyToTemp() {
@@ -30,15 +29,7 @@ function minifyJS() {
 function minifyHTML() {
     return gulp.src('temp/index.html')
         .pipe(htmlmin({collapseWhitespace: true}))
-        .pipe(inlineSource())
-        .pipe(gulp.dest('temp'));
-}
-
-// Replace the src and href paths in the HTML
-function replacePaths() {
-    return gulp.src('temp/index.html')
-        .pipe(replace('src="script.js"', 'src="temp/script.js"'))
-        .pipe(replace('href="styles.css"', 'href="temp/styles.css"'))
+        .pipe(inlineSource({compress: false, rootpath: 'temp'}))
         .pipe(gulp.dest('temp'));
 }
 
@@ -52,8 +43,7 @@ function compressHTML() {
 gulp.task('copyToTemp', copyToTemp);
 gulp.task('minifyCSS', minifyCSS);
 gulp.task('minifyJS', minifyJS);
-gulp.task('replacePaths', replacePaths);
 gulp.task('minifyHTML', minifyHTML);
 gulp.task('compressHTML', compressHTML);
 
-gulp.task('default', gulp.series(copyToTemp, minifyCSS, minifyJS, replacePaths, minifyHTML, compressHTML));
+gulp.task('default', gulp.series(copyToTemp, minifyCSS, minifyJS, minifyHTML, compressHTML));
