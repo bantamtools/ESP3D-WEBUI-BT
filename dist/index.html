@@ -14,7 +14,7 @@
         <script>var fw_version = "";</script>
         <script>var primary_sd = "/ext/";</script>
         <script>var secondary_sd = "/sd/";</script>
-        <link rel="stylesheet" href="styles.css">
+        <link rel="stylesheet" href="styles.css" inline>
     </head>
 
     <body>
@@ -31,7 +31,7 @@
                     <svg id="Art" xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 140 190"
                         style="height:35px; width:35px; max-width: 100%; max-height: 100%;"
-                        transform="translate(-2, 7)"><defs><style>.cls-1{fill:#ee2e24;}</style></defs><title>Rooster_Logo</title>
+                        transform="translate(-6, 0)"><defs><style>.cls-1{fill:#ee2e24;}</style></defs><title>Rooster_Logo</title>
                         <path class="cls-1"
                             d="M221.34,98.79l4.41-2.34a6,6,0,0,0,3.18-5.3V72.85A6.5,6.5,0,0,0,225.18,67l-3.81-1.64V75.78a2.21,2.21,0,1,1-4.4-.2V67.13a6.79,6.79,0,0,0-4.05-5.89l-3.8-1.63V69.78a2.21,2.21,0,1,1-4.4-.2V61.42a6.79,6.79,0,0,0-4.05-5.89l-3.8-1.63v9.88a2.21,2.21,0,1,1-4.4-.2V55.71a6.5,6.5,0,0,0-3.75-5.89l-5-2.2V65.89a9,9,0,0,0,.77,3.64L191.31,85a3,3,0,0,1-.16,2.73l-31.61,53.83a1,1,0,0,1-1.86-.51V95.74a8,8,0,0,0-4.61-7.25L77.78,53.32a.5.5,0,0,0-.69.59l5.62,19.56a13,13,0,0,0,7,8.19l49.72,23.23a2.58,2.58,0,0,1,1.46,3,2.5,2.5,0,0,1-3.47,1.61L86.17,85.53l4.9,17a13,13,0,0,0,7,8.19l41.36,19.32a2.58,2.58,0,0,1,1.46,3,2.5,2.5,0,0,1-3.47,1.61l-42.87-20L99,130.3a13,13,0,0,0,7,8.19l33.39,15.6a2.58,2.58,0,0,1,1.46,3,2.5,2.5,0,0,1-3.47,1.61l-34.9-16.31,4.15,14.44a13,13,0,0,0,6.61,8l27.87,14.42a1,1,0,0,1,.41,1.39l-5.85,10.11a6,6,0,0,0,.2,6.34l13.81,20.68a1,1,0,0,1-.15,1.29l-5.18,4.8a.5.5,0,0,0,.34.87h5.87a6,6,0,0,1,2.09.38l11.49,4.27a.5.5,0,0,0,.55-.8l-3.45-3.84H174.6a6,6,0,0,1,2,.34l12.05,4.21a.5.5,0,0,0,.5-.84L186,224.7h7.17a.5.5,0,0,0,.23-.95l-10-5.07a1,1,0,0,1-.54-.76l-2.56-19.18a6,6,0,0,1,1.55-4.87l28.33-30a18,18,0,0,0,3.37-19.63l-5.73-12.95h0A7,7,0,0,0,219.1,129l.09-.22a13,13,0,0,0-.08-10.18L216,111.5a3,3,0,0,1,2.36-4.17l9.4-1.25a.5.5,0,0,0,.25-.88l-6.78-5.58A.5.5,0,0,1,221.34,98.79ZM173.36,219l-4.06,4.15a1,1,0,0,1-1.14.21l-10-4.71a1,1,0,0,1-.57-.78l-3.07-17.39a6,6,0,0,1,.8-3.94l3.72-6.13a3.12,3.12,0,0,1,4.07-1.24,3,3,0,0,1,1.15,4.2l-2.8,4.58a3,3,0,0,0,.09,3.24l11.9,16.56A1,1,0,0,1,173.36,219ZM211.15,98.79a4.39,4.39,0,1,1,3.64-3.64A4.39,4.39,0,0,1,211.15,98.79Z"
                             transform="translate(-77.07 -40.62)"/>
@@ -39,11 +39,11 @@
                 </a>
                 <div class="navbar-header"><span class="navbar-brand">
                         <!--           <div> -->
-                        <span translate>WebUI for</span> <span id="fwName">BTPlotter</span>
+                        <span translate>WebUI for</span> <span id="fwName">Bantam Tools Plotter</span>
                         <span class="hidden" display="none" id="showSDused">&nbsp;</span>
                     </span>
                 </div>
-                <div class="tab" id="mainuitablinks" style="display: none;"><button
+                <div class="tab" id="mainuitablinks"><button
                         class="tablinks"
                         onclick="opentab(event, 'maintab', 'mainuitabscontent', 'mainuitablinks')"
                         id="maintablink"><svg width="1.3em" height="1.2em"
@@ -77,7 +77,7 @@
                             </g>
                         </svg>
                         <span id="tab_printer_configuration"><span translate>Printer</span><span></span></span></button>
-                    <button style="display: none;" class="tablinks"
+                    <button style="display: flex;" class="tablinks"
                         onclick="opentab(event, 'settingstab', 'mainuitabscontent', 'mainuitablinks')"
                         id="settingtablink"><svg width="1.3em" height="1.2em"
                             viewBox="0 0 1300 1200">
@@ -87,8 +87,8 @@
                                 </path>
                             </g>
                         </svg>
-                        <span translate>BTPlotter</span></button> <button
-                        style="display: none;" class="tablinks"
+                        <span translate>Bantam Tools Plotter</span></button> <button
+                        style="display: flex;" class="tablinks"
                         onclick="opentab(event, 'tablettab', 'mainuitabscontent', 'mainuitablinks')"
                         id="tablettablink"><span>Tablet</span></button>
                 </div>
@@ -624,7 +624,7 @@
                                             onclick="SendZerocommand(grblzerocmd)">&Oslash;<span
                                                 style="font-size:8px"
                                                 id="zero_xyz_btn_txt">XYZ</span></button></div><br>
-                                    <div class="position-container" style="display: none;"
+                                    <div class="position-container" style="display: flex;"
                                         id="positions_labels">
                                         <div class="position_text">
                                             <table>
@@ -882,7 +882,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div style="display: none;" id="grblPanel"
+                            <div style="display: block;" id="grblPanel"
                                 class="panel panel-default panel-flex-col panel-min-width">
                                 <div class="panel-heading">
                                     <div class="panel-flex-row">
@@ -909,7 +909,7 @@
                                                         type="number" min="50"
                                                         max="30000"
                                                         id="autoReportInterval"
-                                                        value="50"
+                                                        value="500"
                                                         onchange="onAutoReportIntervalChange()">
                                                     <label
                                                         for="autoReportInterval"
@@ -3445,7 +3445,7 @@
                                         <td>
                                             <div class="input-group has-control"><input
                                                     class="form-control w4"
-                                                    type="number" min="50"
+                                                    type="number" min="500"
                                                     max="30000"
                                                     id="preferences_autoReport_Interval"
                                                     onchange="Checkvalues('preferences_autoReport_Interval')">
@@ -3734,7 +3734,7 @@
             </div><!-- /UIdisabled content -->
         </div><!-- /UIdisabled Modal -->
         <!-- / template -->
-        <script type="text/javascript" src="script.js">
+        <script type="text/javascript" src="script.js" inline>
           alert("Loading script.js");
     </script>
     </body>
