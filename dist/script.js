@@ -1491,7 +1491,7 @@ let jogStep; //Pull for jog commands distance
             n = 0;
         switch (e) {
             case "preferences_autoReport_Interval":
-                n = parseInt(id(e).value), !isNaN(n) && 50 <= n && n <= 3e4 || (error_message = translate_text_item("Value of auto-report must be between 50ms and 30000ms !!"), t = !1);
+                n = parseInt(id(e).value), !isNaN(n) && 500 <= n && n <= 3e4 || (error_message = translate_text_item("Value of auto-report must be between 500ms and 30000ms !!"), t = !1);
                 break;
             case "preferences_status_Interval_check":
             case "preferences_pos_Interval_check":
