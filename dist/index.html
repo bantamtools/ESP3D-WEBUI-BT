@@ -1119,6 +1119,63 @@
                                     </div>
                                 </div>
                             </div>
+                        <div id="rssPanel"
+                                class="panel panel-default panel-flex-col">
+                                <div class="panel-heading">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="pull-left">
+                                                <table>
+                                                    <tr>
+                                                        <td><b><span style="margin-left: 10px;"
+                                                                    id="fileSource"
+                                                                    translate>RSS Feed</span></b></td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                            <div class="hide_it pull-right"
+                                                id="files_uploading_msg">
+                                                <table>
+                                                    <tr>
+                                                        <td><span translate>Uploading</span></td>
+                                                        <td>&nbsp;</td>
+                                                        <td><span
+                                                                class="text-info"
+                                                                id="files_currentUpload_msg"></span>
+                                                        </td>
+                                                        <td>&nbsp;</td>
+                                                        <td width="100px"><progress
+                                                                name="prg"
+                                                                id="files_prg"
+                                                                max="100"></progress></td>
+                                                        <td><span
+                                                                id="files_percent_upload"></span>%</td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                            <div class="pull-right"
+                                                id="files_navigation_buttons">
+                                                <div class="item-flex-row-wrap">
+                                                    <button
+                                                        class="btn btn-xs btn-primary hide_it"
+                                                        id="rss_refresh_btn"
+                                                        onclick="rss_refreshFeed()"
+                                                        translate>Refresh</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="rss-body"
+                                    class="panel-body panel-height panel-max-height panel-scroll panel-flex-main">
+                                    <div id="rss_list_loader"
+                                        class="loader hide_it"
+                                        style="margin:auto"></div>
+                                    <ul class="list-group" id="rss_feedList"></ul>
+                                </div>
+                                <div class="panel-footer panel-footer-height">
+                                </div>
+                            </div>
                             <div id="commandsPanel"
                                 class="panel panel-default panel-flex-col">
                                 <div class="panel-heading"><b><span translate>Commands</span></b>
