@@ -710,6 +710,11 @@ let jogStep; //Pull for jog commands distance
         displayNone("rss_list_loader")
     }
 
+    // Run RSS refresh every 6 hours
+    setInterval(function(){
+        rss_refreshFeed()
+    }, 21600000)
+
     function files_format_size(e) { e = parseInt(e); return e < 1024 ? e + " B" : e < 1048576 ? (e / 1024).toFixed(2) + " KB" : e < 1073741824 ? (e / 1024 / 1024).toFixed(2) + " MB" : (e / 1024 / 1024 / 1024).toFixed(2) + " GB" }
 
     function files_is_filename(e) {
@@ -772,6 +777,10 @@ let jogStep; //Pull for jog commands distance
         return xmlHttp.responseXML;
     }
 
+    function myFunction(){
+        console.log('myFunction Called')
+    }
+
     function rss_build_feed_line(el) {
         var content = "";
         content += "<li class='list-group-item list-group-hover' >";
@@ -799,13 +808,6 @@ let jogStep; //Pull for jog commands distance
             const items = data.querySelectorAll("item");
             items.forEach(el => {
                 t += rss_build_feed_line(el)
-            //  t += `
-            //    <li>
-            //        <a href="${el.querySelector("link").innerHTML}">
-            //          ${el.querySelector("title").innerHTML}
-            //        </a>
-            //    </li>
-            //  `;
             });
             displayBlock("rss_feedList"), id("rss_feedList").innerHTML = t
           });
