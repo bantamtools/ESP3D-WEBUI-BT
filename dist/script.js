@@ -485,6 +485,36 @@ let jogStep; //Pull for jog commands distance
 
     function JogFeedrate(e) { e = e.startsWith("Z") ? "control_z_velocity" : "control_xy_velocity", e = parseInt(id(e).value); return e < 1 || isNaN(e) || null === e ? (alertdlg(translate_text_item("Out of range"), translate_text_item("Feedrate value must be at least 1 mm/min!")), 1) : e }
 
+    function getSelectedPen() {
+        var selectElement = document.getElementById('penDropdown');
+        var selectedValue = selectElement.options[selectElement.selectedIndex].value;
+        var selectedText = selectElement.options[selectElement.selectedIndex].text;
+        
+        // Now, you can use the selectedValue or selectedText as needed
+        console.log("Selected value: " + selectedValue);
+        console.log("Selected text: " + selectedText);
+      }
+
+    function TestOffsetCommandBT(){
+        // We are going to want to steal SendPrinterCommand
+        var penDropdown = document.getElementById('penDropdown');
+        var selectedPen = penDropdown.options[penDropdown.selectedIndex].value;
+        var z_offset = document.getElementById('floatselect').value;
+        var cmd = "G0Z3\rG0X20\rG1Z" + z_offset + " F1000\rG0X177\rG0Z0 F1000\rG0Z3\rG0X20\r";
+        SendPrinterCommand(cmd, false);
+
+        console.log("SetPenOffsetBT Caled with pen: " + selectedPen + ", offset = " + z_offset);
+        console.log("Cmd: " + cmd);
+    }
+
+    function SetOffsetCommandBT(){
+        var selectedPen = penDropdown.options[penDropdown.selectedIndex].value.at(-1);
+        var z_offset = document.getElementById('floatselect').value;
+        var cmd = "G10L2P" + selectedPen + "X0Y0Z" + z_offset;
+        SendPrinterCommand(cmd, false);
+        console.log("SetOffsetCommandBT Called. CMD: " + cmd);
+    }
+
     function sendJogBT(axis, direction) { 
         var dir; 
         var feedrate; 
