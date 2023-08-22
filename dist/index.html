@@ -54,7 +54,7 @@
                                 </path>
                             </g>
                         </svg>
-                        <span translate>Interface</span></button> <button
+                        <span translate>Plotter Interface</span></button> <button
                         class="tablinks hide_it"
                         onclick="opentab(event, 'cameratab', 'mainuitabscontent', 'mainuitablinks')"
                         id="camtablink"><svg width="1.3em" height="1.2em"
@@ -87,8 +87,9 @@
                                 </path>
                             </g>
                         </svg>
-                        <span translate>Settings</span></button> <button
-                        style="display: flex;" class="tablinks"
+
+                        <span translate>Plotter Settings</span></button> <button
+                        style="display: flex;" class="tablinks hidden"
                         onclick="opentab(event, 'tablettab', 'mainuitabscontent', 'mainuitablinks')"
                         id="tablettablink"><span>Tablet</span></button>
                 </div>
@@ -1175,7 +1176,7 @@
                                         <div class="col-md-12">
                                             <div><b><span translate>GRBL</span></b></div>
                                             <div></div>
-                                            <div class="report" id="autocheck"><label
+                                            <div class="report hidden" id="autocheck"><label
                                                     translate>Reports:</label>
                                                 <span><input type="radio"
                                                         id="report_none"
@@ -1192,7 +1193,7 @@
                                                     <label for="report_auto"
                                                         translate>Auto</label>
                                                     <input class="w4"
-                                                        type="number" min="50"
+                                                        type="number" min="500"
                                                         max="30000"
                                                         id="autoReportInterval"
                                                         value="500"
