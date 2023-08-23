@@ -839,6 +839,9 @@ let jogStep; //Pull for jog commands distance
                 infodlg("RSS Update", "RSS feed has new updates!");
             }
             displayBlock("rss_feedList"), id("rss_feedList").innerHTML = t
+          })
+        .catch(err => {
+            console.log('RSS feed failed to load ',err);
           });
     }
 
