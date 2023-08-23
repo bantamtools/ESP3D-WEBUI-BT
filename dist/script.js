@@ -86,6 +86,13 @@ let jogStep; //Pull for jog commands distance
         var a = setactiveModal("alertdlg.html", n);
         null != a && (n = a.element.getElementsByClassName("modal-title")[0], a = a.element.getElementsByClassName("modal-text")[0], n.innerHTML = e, a.innerHTML = t, showModal())
     }
+
+    async function infodlg(e, t, n) {
+        var a = setactiveModal("infodlg.html", n);
+        null != a && (n = a.element.getElementsByClassName("modal-title")[0], a = a.element.getElementsByClassName("modal-text")[0], n.innerHTML = e, a.innerHTML = t, showModal())
+        await new Promise(r => setTimeout(r, 5000));
+        closeModal("ok");
+    }
     var ESP3D_authentication = !1,
         page_id = "",
         convertDHT2Fahrenheit = !1,
@@ -773,7 +780,7 @@ let jogStep; //Pull for jog commands distance
         return xmlHttp.responseXML;
     }
 
-    var rssLastUpdateTime = 0;
+    var rssLastUpdateTime = -1;
     var rssNewUpdateTime = 0;
     function getRssLastUpdateTime() { SendGetHttp("/command?plain=" + encodeURIComponent("[ESP900]plain"), getRssLastUpdateTimeSuccess) }
     function getRssLastUpdateTimeSuccess(e) { rssLastUpdateTime = e; }
@@ -784,7 +791,7 @@ let jogStep; //Pull for jog commands distance
 
         var is_updated = false;
         var timestamp = parseInt((new Date(el.querySelector("pubDate").innerHTML).getTime() / 1000).toFixed(0))
-        if (timestamp > rssLastUpdateTime) {
+        if (rssLastUpdateTime > -1 && timestamp > rssLastUpdateTime) {
             is_updated = true;
             if (timestamp > rssNewUpdateTime) {
                 rssNewUpdateTime = timestamp;
@@ -831,6 +838,7 @@ let jogStep; //Pull for jog commands distance
             if (rssNewUpdateTime > 0) {
                 rssLastUpdateTime = rssNewUpdateTime
                 setRssLastUpdateTime(rssLastUpdateTime);
+                infodlg("RSS Update", "RSS feed has new updates!");
             }
             displayBlock("rss_feedList"), id("rss_feedList").innerHTML = t
           });
