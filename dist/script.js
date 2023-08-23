@@ -710,11 +710,6 @@ let jogStep; //Pull for jog commands distance
         displayNone("rss_list_loader")
     }
 
-    // Run RSS refresh every 6 hours
-    setInterval(function(){
-        rss_refreshFeed()
-    }, 21600000)
-
     function files_format_size(e) { e = parseInt(e); return e < 1024 ? e + " B" : e < 1048576 ? (e / 1024).toFixed(2) + " KB" : e < 1073741824 ? (e / 1024 / 1024).toFixed(2) + " MB" : (e / 1024 / 1024 / 1024).toFixed(2) + " GB" }
 
     function files_is_filename(e) {
@@ -782,6 +777,12 @@ let jogStep; //Pull for jog commands distance
     }
 
     function rss_build_feed_line(el) {
+
+        var timestamp = parseInt((new Date(el.querySelector("pubDate").innerHTML).getTime() / 1000).toFixed(0))
+        if (timestamp > last_update_time && timestamp > new_update_time) {
+            new_update_time = timestamp;
+        }
+        
         var content = "";
         content += "<li class='list-group-item list-group-hover' >";
         content += "<div class='row'>";
@@ -795,20 +796,27 @@ let jogStep; //Pull for jog commands distance
         content += "</a></td></tr></table></div>";
         content += "</div>";
         content += "</li>";
+
         return content;
     }
 
+    var last_update_time = 0;
+    var new_update_time = 0;
     function rss_build_display_feed() {
 
-    fetch("http://mattstaniszewski.net/rss/")
+    fetch(rssUrl)
         .then(response => response.text())
         .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
         .then(data => {
             var t = ""
+            new_update_time = 0;
             const items = data.querySelectorAll("item");
             items.forEach(el => {
                 t += rss_build_feed_line(el)
             });
+            if (new_update_time > 0) {
+                last_update_time = new_update_time
+            }
             displayBlock("rss_feedList"), id("rss_feedList").innerHTML = t
           });
     }
@@ -1759,6 +1767,12 @@ let jogStep; //Pull for jog commands distance
         return t
     }
 
+    var rssRefreshTimeSec = 86400;  // 24 hours
+    var rssTimer =  setInterval(function(){
+                        rss_refreshFeed()
+                    }, rssRefreshTimeSec * 1000)
+    var rssUrl = "http://url.com/rss"
+
     function create_setting_entry(e, t) {
         if (!is_setting_entry(e)) return t;
         var n, a = e.H,
@@ -1775,6 +1789,18 @@ let jogStep; //Pull for jog commands distance
             }
         var i = i.trim(),
             u = { index: t, F: e.F, label: a, defaultvalue: i, cmd: o, Options: r, min_val: n, max_val: u, type: e.T, pos: e.P };
+
+        // Save off RSS settings to use in WebUI
+        if (u.label == "RSS/RefreshTimeSec") {
+            rssRefreshTimeSec = u.defaultvalue;
+            clearInterval(rssTimer);
+            rssTimer =  setInterval(function(){
+                            rss_refreshFeed()
+                        }, rssRefreshTimeSec * 1000)
+        
+        } else if (u.label == "RSS/URL") {
+            rssUrl = u.defaultvalue;
+        }
         return scl.push(u), ++t
     }
 
