@@ -713,8 +713,8 @@ let jogStep; //Pull for jog commands distance
     function rss_refreshFeed(e, t) {
         var n = e;
         displayBlock("rss_list_loader")
-        syncRssRefreshTime();
         rss_build_display_feed() 
+        syncRssFeed()
         displayNone("rss_list_loader")
     }
 
@@ -784,8 +784,7 @@ let jogStep; //Pull for jog commands distance
     var rssNewUpdateTime = 0;
     function getRssLastUpdateTime() { SendGetHttp("/command?plain=" + encodeURIComponent("[ESP900]plain"), getRssLastUpdateTimeSuccess) }
     function getRssLastUpdateTimeSuccess(e) { rssLastUpdateTime = e; }
-    function setRssLastUpdateTime(e) { SendGetHttp("/command?plain=" + encodeURIComponent("[ESP901]" + e)) } 
-    function syncRssRefreshTime() { SendGetHttp("/command?plain=" + encodeURIComponent("[ESP902]plain")) } 
+    function syncRssFeed() { SendGetHttp("/command?plain=" + encodeURIComponent("[ESP901]plain")) } 
 
     function rss_build_feed_line(el) {
 
@@ -837,7 +836,6 @@ let jogStep; //Pull for jog commands distance
             });
             if (rssNewUpdateTime > 0) {
                 rssLastUpdateTime = rssNewUpdateTime
-                setRssLastUpdateTime(rssLastUpdateTime);
                 infodlg("RSS Update", "RSS feed has new updates!");
             }
             displayBlock("rss_feedList"), id("rss_feedList").innerHTML = t
