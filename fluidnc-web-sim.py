@@ -181,6 +181,8 @@ sdfiles = '{"files":[{"name":"localfs","shortname":"localfs","size":"-1","dateti
 
 gresp = "[GC:G1 G54 G17 G21 G90 G94 M5 M9 T0 F1000 S0]"
 
+esp900resp = '1692741529'
+
 esp800resp = 'FW version: FluidNC v3.6.7 (Devt-5692a7c1-dirty) # FW target:grbl-embedded  # FW HW:Direct SD  # primary sd:/sd # secondary sd:none  # authentication:no # webcommunication: Sync: ' + fluidnc_websocket() + ' # hostname:fluidnc # axis:3'
 
 esp400resp = '''
@@ -270,15 +272,21 @@ def do_command():
 
     # If not proxying, respond to a few commands
     if plainval != None:
+        if plainval == '[ESP900]':
+            return esp900resp
         if plainval == '[ESP400]':
             return esp400resp
-        commandtextval = request.args.get('commandText')
-        if commandtextval != None:
-            print("commandText:", commandtextval)
-            if commandtextval == '$G':
-                if len(CONNECTIONS):
-                    wsock = CONNECTIONS[0]
-                    wsock.send(gresp)
+    commandtextval = request.args.get('commandText')
+    if commandtextval != None:
+        print("commandText:", commandtextval)
+        if commandtextval == '$G':
+            if len(CONNECTIONS):
+                wsock = CONNECTIONS[0]
+                wsock.send(gresp)
+        if commandtextval == '[ESP900]':
+            return esp900resp
+        if commandtextval == '[ESP902]':
+            return 'SYNC'
     return ""
 
 def handle_files(fs, request):

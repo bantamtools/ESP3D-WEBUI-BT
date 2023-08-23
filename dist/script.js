@@ -706,6 +706,7 @@ let jogStep; //Pull for jog commands distance
     function rss_refreshFeed(e, t) {
         var n = e;
         displayBlock("rss_list_loader")
+        syncRssRefreshTime();
         rss_build_display_feed() 
         displayNone("rss_list_loader")
     }
@@ -772,15 +773,18 @@ let jogStep; //Pull for jog commands distance
         return xmlHttp.responseXML;
     }
 
-    function myFunction(){
-        console.log('myFunction Called')
-    }
+    var rssLastUpdateTime = 0;
+    var rssNewUpdateTime = 0;
+    function getRssLastUpdateTime() { SendGetHttp("/command?plain=" + encodeURIComponent("[ESP900]plain"), getRssLastUpdateTimeSuccess) }
+    function getRssLastUpdateTimeSuccess(e) { rssLastUpdateTime = e; }
+    function setRssLastUpdateTime(e) { SendGetHttp("/command?plain=" + encodeURIComponent("[ESP901]" + e)) } 
+    function syncRssRefreshTime() { SendGetHttp("/command?plain=" + encodeURIComponent("[ESP902]plain")) } 
 
     function rss_build_feed_line(el) {
 
         var timestamp = parseInt((new Date(el.querySelector("pubDate").innerHTML).getTime() / 1000).toFixed(0))
-        if (timestamp > last_update_time && timestamp > new_update_time) {
-            new_update_time = timestamp;
+        if (timestamp > rssLastUpdateTime && timestamp > rssNewUpdateTime) {
+            rssNewUpdateTime = timestamp;
         }
         
         var content = "";
@@ -800,22 +804,23 @@ let jogStep; //Pull for jog commands distance
         return content;
     }
 
-    var last_update_time = 0;
-    var new_update_time = 0;
     function rss_build_display_feed() {
+
+    getRssLastUpdateTime();  // Update to latest update time
 
     fetch(rssUrl)
         .then(response => response.text())
         .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
         .then(data => {
             var t = ""
-            new_update_time = 0;
+            rssNewUpdateTime = 0;
             const items = data.querySelectorAll("item");
             items.forEach(el => {
                 t += rss_build_feed_line(el)
             });
-            if (new_update_time > 0) {
-                last_update_time = new_update_time
+            if (rssNewUpdateTime > 0) {
+                rssLastUpdateTime = rssNewUpdateTime
+                setRssLastUpdateTime(rssLastUpdateTime);
             }
             displayBlock("rss_feedList"), id("rss_feedList").innerHTML = t
           });
@@ -1800,6 +1805,7 @@ let jogStep; //Pull for jog commands distance
         
         } else if (u.label == "RSS/URL") {
             rssUrl = u.defaultvalue;
+            rss_refreshFeed();  // Do an immediate refresh once we have an updated URL
         }
         return scl.push(u), ++t
     }
