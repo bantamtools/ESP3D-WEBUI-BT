@@ -193,6 +193,22 @@ esp400resp = '''
       "S":"20",
       "M":"0"
     },
+    {"F":"nvs",
+      "P":"RSS/RefreshTimeSec",
+      "H":"RSS/RefreshTimeSec",
+      "T":"I",
+      "V":"30",
+      "S":"604800",
+      "M":"0"
+    },
+    {"F":"nvs",
+      "P":"RSS/URL",
+      "H":"RSS/URL",
+      "T":"S",
+      "V":"https://mattstaniszewski.net/rss/",
+      "S":"2083",
+      "M":"0"
+    },
     {"F":"tree",
       "P":"/board",
       "H":"/board",
