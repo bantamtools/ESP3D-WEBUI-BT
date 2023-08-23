@@ -7246,7 +7246,7 @@ select:disabled {
     color: white
     /* margin-left: 10px; Adds some spacing between the button and label */
 }
-.container {
+.pen-offset-container {
     margin-top: 10px; /* Adds some spacing between the dropdown and the number input */
     display: flex;
     align-items: center;
