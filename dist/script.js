@@ -782,13 +782,20 @@ let jogStep; //Pull for jog commands distance
 
     function rss_build_feed_line(el) {
 
+        var is_updated = false;
         var timestamp = parseInt((new Date(el.querySelector("pubDate").innerHTML).getTime() / 1000).toFixed(0))
-        if (timestamp > rssLastUpdateTime && timestamp > rssNewUpdateTime) {
-            rssNewUpdateTime = timestamp;
+        if (timestamp > rssLastUpdateTime) {
+            is_updated = true;
+            if (timestamp > rssNewUpdateTime) {
+                rssNewUpdateTime = timestamp;
+            }
         }
         
         var content = "";
-        content += "<li class='list-group-item list-group-hover' >";
+        if (is_updated)
+            content += "<li class='list-group-item-new list-group-hover' >";
+        else
+            content += "<li class='list-group-item list-group-hover' >";
         content += "<div class='row'>";
         content += "<div class='col-md-5 col-sm-5 no_overflow' ";
         content += "><table><tr><td><span  style='color:DeepSkyBlue;'>";
@@ -797,7 +804,10 @@ let jogStep; //Pull for jog commands distance
         content += el.querySelector("link").innerHTML;
         content += "'>"
         content += el.querySelector("title").innerHTML;
-        content += "</a></td></tr></table></div>";
+        content += "</a>"
+        if (is_updated)
+            content += "  *NEW*";
+        content += "</td></tr></table></div>";
         content += "</div>";
         content += "</li>";
 
