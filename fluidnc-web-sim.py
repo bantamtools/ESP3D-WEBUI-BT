@@ -181,7 +181,7 @@ sdfiles = '{"files":[{"name":"localfs","shortname":"localfs","size":"-1","dateti
 
 gresp = "[GC:G1 G54 G17 G21 G90 G94 M5 M9 T0 F1000 S0]"
 
-esp900resp = '1692741529'
+esp900resp = '1692914269'
 
 esp800resp = 'FW version: FluidNC v3.6.7 (Devt-5692a7c1-dirty) # FW target:grbl-embedded  # FW HW:Direct SD  # primary sd:/sd # secondary sd:none  # authentication:no # webcommunication: Sync: ' + fluidnc_websocket() + ' # hostname:fluidnc # axis:3'
 
@@ -285,7 +285,7 @@ def do_command():
                 wsock.send(gresp)
         if commandtextval == '[ESP900]':
             return esp900resp
-        if commandtextval == '[ESP902]':
+        if commandtextval == '[ESP901]':
             return 'SYNC'
     return ""
 

@@ -790,6 +790,11 @@ let jogStep; //Pull for jog commands distance
 
         var is_updated = false;
         var timestamp = parseInt((new Date(el.querySelector("pubDate").innerHTML).getTime() / 1000).toFixed(0))
+
+        if (isNaN(timestamp)) {
+            return null;
+        }
+
         if (rssLastUpdateTime > -1 && timestamp > rssLastUpdateTime) {
             is_updated = true;
             if (timestamp > rssNewUpdateTime) {
@@ -820,6 +825,23 @@ let jogStep; //Pull for jog commands distance
         return content;
     }
 
+    function rss_throw_error() {
+        var content = ""
+        
+        content += "<li class='list-group-item list-group-hover' >";
+        content += "<div class='row'>";
+        content += "<div class='col-md-11 col-sm-11 no_overflow' ";
+        content += "><table><tr><td><span  style='color:Red;'>"
+        content += get_icon_svg("warning-sign");
+        content += "</span ></td><td>";
+        content += "&nbsp;Error: Bad URL, XML format or no internet"
+        content += "</td></tr></table></div>";
+        content += "</div>";
+        content += "</li>";
+
+        return content;
+    }
+
     function rss_build_display_feed() {
 
     getRssLastUpdateTime();  // Update to latest update time
@@ -830,10 +852,26 @@ let jogStep; //Pull for jog commands distance
         .then(data => {
             var t = ""
             rssNewUpdateTime = 0;
-            const items = data.querySelectorAll("item");
-            items.forEach(el => {
-                t += rss_build_feed_line(el)
-            });
+            try {
+                const items = data.querySelectorAll("item");
+                if (items.length == 0) {
+                    throw badFormatError;
+                }
+                items.forEach(el => {
+                    console.log(el)
+                    line = rss_build_feed_line(el);
+                    if (line == null) {
+                        throw badFormatError;
+                    } else {
+                        t += line;
+                    }
+                });
+            } catch (e) {
+                console.log(e)
+                console.log('RSS feed bad format');
+                var t = rss_throw_error();
+                displayBlock("rss_feedList"), id("rss_feedList").innerHTML = t
+            }
             if (rssNewUpdateTime > 0) {
                 rssLastUpdateTime = rssNewUpdateTime
                 infodlg("RSS Update", "RSS feed has new updates!");
@@ -841,18 +879,8 @@ let jogStep; //Pull for jog commands distance
             displayBlock("rss_feedList"), id("rss_feedList").innerHTML = t
           })
         .catch(err => {
-            console.log('RSS feed failed to load ', err);
-            var t = ""
-            t += "<li class='list-group-item list-group-hover' >";
-            t += "<div class='row'>";
-            t += "<div class='col-md-11 col-sm-11 no_overflow' ";
-            t += "><table><tr><td><span  style='color:Red;'>"
-            t += get_icon_svg("warning-sign");
-            t += "</span ></td><td>";
-            t += "&nbsp;Error: Bad URL, XML format or no internet"
-            t += "</td></tr></table></div>";
-            t += "</div>";
-            t += "</li>";
+            console.log('RSS feed failed to load');
+            var t = rss_throw_error();
             displayBlock("rss_feedList"), id("rss_feedList").innerHTML = t
           });
     }
