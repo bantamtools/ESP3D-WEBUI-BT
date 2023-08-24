@@ -841,7 +841,19 @@ let jogStep; //Pull for jog commands distance
             displayBlock("rss_feedList"), id("rss_feedList").innerHTML = t
           })
         .catch(err => {
-            console.log('RSS feed failed to load ',err);
+            console.log('RSS feed failed to load ', err);
+            var t = ""
+            t += "<li class='list-group-item list-group-hover' >";
+            t += "<div class='row'>";
+            t += "<div class='col-md-11 col-sm-11 no_overflow' ";
+            t += "><table><tr><td><span  style='color:Red;'>"
+            t += get_icon_svg("warning-sign");
+            t += "</span ></td><td>";
+            t += "&nbsp;Error: Bad URL, XML format or no internet"
+            t += "</td></tr></table></div>";
+            t += "</div>";
+            t += "</li>";
+            displayBlock("rss_feedList"), id("rss_feedList").innerHTML = t
           });
     }
 
