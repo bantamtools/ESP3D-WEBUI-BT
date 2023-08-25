@@ -710,12 +710,34 @@ let jogStep; //Pull for jog commands distance
         files_currentPath = e, current_source != last_source && (e = files_currentPath = "/", last_source = current_source), (current_source == tft_sd || current_source == tft_usb ? displayNone : displayBlock)("print_upload_btn"), void 0 === t && (t = !1), id("files_currentPath").innerHTML = files_currentPath, files_file_list = [], files_build_display_filelist(!(files_status_list = [])), displayBlock("files_list_loader"), displayBlock("files_nav_loader"), direct_sd && SendGetHttp("/upload?path=" + encodeURI(n), files_list_success, files_list_failed)
     }
 
-    function rss_refreshFeed(e, t) {
-        var n = e;
-        displayBlock("rss_list_loader")
-        rss_build_display_feed() 
-        syncRssFeed()
+    function rss_refreshFeed(e) { displayBlock("rss_list_loader"), SendGetHttp("/command?plain=" + encodeURIComponent("[ESP902]"), getRssFeedSuccess) }
+
+    function getRssFeedSuccess(e) {
+        process_rss_answer(e)
         displayNone("rss_list_loader")
+    }
+
+    var rss_feed = []
+    function process_rss_answer(e) {
+        var t = !0;
+        rss_feed = [];
+        try {
+            var n = JSON.parse(e);
+            if (void 0 === n.rss) t = !1, console.log("No RSS");
+            else if (0 < n.rss.length) {
+                for (var a = 0, i = 0; i < n.rss.length; i++) a = create_rss_entry(n.rss[i], a);
+                0 < a ? (rss_build_display_feed()) : t = !1
+            } else t = !1
+        } catch (e) { console.error("Parsing error:", e), t = !1 }
+        return t
+    }
+
+    function is_rss_entry(e) { return void 0 !== e.title && void 0 !== e.link && void 0 !== e.updated }
+
+    function create_rss_entry(e, t) {
+        if (!is_rss_entry(e)) return t;
+        var u = { title: e.title, link: e.link, updated: parseInt(e.updated) };
+        return rss_feed.push(u), ++t
     }
 
     function files_format_size(e) { e = parseInt(e); return e < 1024 ? e + " B" : e < 1048576 ? (e / 1024).toFixed(2) + " KB" : e < 1073741824 ? (e / 1024 / 1024).toFixed(2) + " MB" : (e / 1024 / 1024 / 1024).toFixed(2) + " GB" }
@@ -771,61 +793,7 @@ let jogStep; //Pull for jog commands distance
         displayBlock("files_fileList"), id("files_fileList").innerHTML = t, 0 == files_status_list.length && "" != files_error_status && files_status_list.push({ status: files_error_status, path: files_currentPath, used: "-1", total: "-1", occupation: "-1" }), 0 < files_status_list.length ? ("-1" != files_status_list[0].total ? (id("files_sd_status_total").innerHTML = files_status_list[0].total, id("files_sd_status_used").innerHTML = files_status_list[0].used, id("files_sd_status_occupation").value = files_status_list[0].occupation, id("files_sd_status_percent").innerHTML = files_status_list[0].occupation, displayTable("files_space_sd_status")) : displayNone("files_space_sd_status"), "" == files_error_status || "ok" != files_status_list[0].status.toLowerCase() && 0 != files_status_list[0].status.length || (files_status_list[0].status = files_error_status), files_error_status = "", "ok" != files_status_list[0].status.toLowerCase() ? (id("files_sd_status_msg").innerHTML = translate_text_item(files_status_list[0].status, !0), displayTable("files_status_sd_status")) : displayNone("files_status_sd_status")) : displayNone("files_space_sd_status")
     }
 
-    function httpGet(theUrl) {
-        var xmlHttp = null;
-
-        xmlHttp = new XMLHttpRequest();
-        xmlHttp.open("GET", theUrl, false);
-        xmlHttp.send(null);
-        return xmlHttp.responseXML;
-    }
-
-    var rssLastUpdateTime = -1;
-    var rssNewUpdateTime = 0;
-    function getRssLastUpdateTime() { SendGetHttp("/command?plain=" + encodeURIComponent("[ESP900]plain"), getRssLastUpdateTimeSuccess) }
-    function getRssLastUpdateTimeSuccess(e) { rssLastUpdateTime = e; }
-    function syncRssFeed() { SendGetHttp("/command?plain=" + encodeURIComponent("[ESP901]plain")) } 
-
-    function rss_build_feed_line(el) {
-
-        var is_updated = false;
-        var timestamp = parseInt((new Date(el.querySelector("pubDate").innerHTML).getTime() / 1000).toFixed(0))
-
-        if (isNaN(timestamp)) {
-            return null;
-        }
-
-        if (rssLastUpdateTime > -1 && timestamp > rssLastUpdateTime) {
-            is_updated = true;
-            if (timestamp > rssNewUpdateTime) {
-                rssNewUpdateTime = timestamp;
-            }
-        }
-        
-        var content = "";
-        if (is_updated)
-            content += "<li class='list-group-item-new list-group-hover' >";
-        else
-            content += "<li class='list-group-item list-group-hover' >";
-        content += "<div class='row'>";
-        content += "<div class='col-md-5 col-sm-5 no_overflow' ";
-        content += "><table><tr><td><span  style='color:DeepSkyBlue;'>";
-        content += get_icon_svg("file");
-        content += "</span ></td><td><a href='";
-        content += el.querySelector("link").innerHTML;
-        content += "'>"
-        content += el.querySelector("title").innerHTML;
-        content += "</a>"
-        if (is_updated)
-            content += "  *NEW*";
-        content += "</td></tr></table></div>";
-        content += "</div>";
-        content += "</li>";
-
-        return content;
-    }
-
-    function rss_throw_error() {
+    function rss_throw_error(msg) {
         var content = ""
         
         content += "<li class='list-group-item list-group-hover' >";
@@ -833,8 +801,8 @@ let jogStep; //Pull for jog commands distance
         content += "<div class='col-md-11 col-sm-11 no_overflow' ";
         content += "><table><tr><td><span  style='color:Red;'>"
         content += get_icon_svg("warning-sign");
-        content += "</span ></td><td>";
-        content += "&nbsp;Error: Bad URL, XML format or no internet"
+        content += "</span ></td><td>&nbsp;";
+        content += msg;
         content += "</td></tr></table></div>";
         content += "</div>";
         content += "</li>";
@@ -842,52 +810,49 @@ let jogStep; //Pull for jog commands distance
         return content;
     }
 
-    function rss_build_display_feed() {
+    function rss_build_feed_line(el) {
+        
+        var content = "";
 
-    getRssLastUpdateTime();  // Update to latest update time
+        // Treat entries with blank links as errors
+        if (el.link === "") {
 
-    fetch(rssUrl)
-        .then(response => response.text())
-        .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
-        .then(data => {
-            var t = ""
-            rssNewUpdateTime = 0;
-            try {
-                const items = data.querySelectorAll("item");
-                if (items.length == 0) {
-                    throw badFormatError;
-                }
-                items.forEach(el => {
-                    console.log(el)
-                    line = rss_build_feed_line(el);
-                    if (line == null) {
-                        throw badFormatError;
-                    } else {
-                        t += line;
-                    }
-                });
-            } catch (e) {
-                console.log(e)
-                console.log('RSS feed bad format');
-                var t = rss_throw_error();
-                displayBlock("rss_feedList"), id("rss_feedList").innerHTML = t
-            }
-            if (rssNewUpdateTime > 0) {
-                rssLastUpdateTime = rssNewUpdateTime
-                infodlg("RSS Update", "RSS feed has new updates!");
-            }
-            displayBlock("rss_feedList"), id("rss_feedList").innerHTML = t
-          })
-        .catch(err => {
-            console.log('RSS feed failed to load');
-            var t = rss_throw_error();
-            displayBlock("rss_feedList"), id("rss_feedList").innerHTML = t
-          });
+            content += rss_throw_error(el.title);  // Use title as error message
+
+        } else {
+
+            if (el.updated)
+                content += "<li class='list-group-item-new list-group-hover' >";
+            else
+                content += "<li class='list-group-item list-group-hover' >";
+            content += "<div class='row'>";
+            content += "<div class='col-md-5 col-sm-5 no_overflow' ";
+            content += "><table><tr><td><span  style='color:DeepSkyBlue;'>";
+            content += get_icon_svg("file");
+            content += "</span ></td><td><a href='";
+            content += el.link;
+            content += "'>"
+            content += el.title;
+            content += "</a>"
+            if (el.updated)
+                content += "  *NEW*";
+            content += "</td></tr></table></div>";
+            content += "</div>";
+            content += "</li>";
+        }
+
+        return content;
     }
 
-    //for (var index = 0; index < files_file_list.length; index++) {
-    //    if (files_file_list[index].isdir == false) content += files_build_file_line(index);
-    //}
+    function rss_build_display_feed() {
+
+        var t = ""
+        rss_feed.forEach(el => {
+            t += rss_build_feed_line(el);
+        });
+        
+        displayBlock("rss_feedList"), id("rss_feedList").innerHTML = t
+    }
 
     function files_abort() { SendPrinterCommand("abort") }
 
