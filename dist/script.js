@@ -710,7 +710,12 @@ let jogStep; //Pull for jog commands distance
         files_currentPath = e, current_source != last_source && (e = files_currentPath = "/", last_source = current_source), (current_source == tft_sd || current_source == tft_usb ? displayNone : displayBlock)("print_upload_btn"), void 0 === t && (t = !1), id("files_currentPath").innerHTML = files_currentPath, files_file_list = [], files_build_display_filelist(!(files_status_list = [])), displayBlock("files_list_loader"), displayBlock("files_nav_loader"), direct_sd && SendGetHttp("/upload?path=" + encodeURI(n), files_list_success, files_list_failed)
     }
 
-    function rss_refreshFeed(e) { displayBlock("rss_list_loader"), SendGetHttp("/command?plain=" + encodeURIComponent("[ESP902]"), getRssFeedSuccess) }
+    async function rss_refreshFeed(e) { 
+        syncRssFeed();
+        await new Promise(r => setTimeout(r, 2000));  // Wait for ESP side to update the feed
+        displayBlock("rss_list_loader");
+        SendGetHttp("/command?plain=" + encodeURIComponent("[ESP902]"), getRssFeedSuccess);
+    }
 
     function getRssFeedSuccess(e) {
         process_rss_answer(e)
@@ -793,6 +798,8 @@ let jogStep; //Pull for jog commands distance
         displayBlock("files_fileList"), id("files_fileList").innerHTML = t, 0 == files_status_list.length && "" != files_error_status && files_status_list.push({ status: files_error_status, path: files_currentPath, used: "-1", total: "-1", occupation: "-1" }), 0 < files_status_list.length ? ("-1" != files_status_list[0].total ? (id("files_sd_status_total").innerHTML = files_status_list[0].total, id("files_sd_status_used").innerHTML = files_status_list[0].used, id("files_sd_status_occupation").value = files_status_list[0].occupation, id("files_sd_status_percent").innerHTML = files_status_list[0].occupation, displayTable("files_space_sd_status")) : displayNone("files_space_sd_status"), "" == files_error_status || "ok" != files_status_list[0].status.toLowerCase() && 0 != files_status_list[0].status.length || (files_status_list[0].status = files_error_status), files_error_status = "", "ok" != files_status_list[0].status.toLowerCase() ? (id("files_sd_status_msg").innerHTML = translate_text_item(files_status_list[0].status, !0), displayTable("files_status_sd_status")) : displayNone("files_status_sd_status")) : displayNone("files_space_sd_status")
     }
 
+    function syncRssFeed() { SendGetHttp("/command?plain=" + encodeURIComponent("[ESP901]plain")) } 
+
     function rss_throw_error(msg) {
         var content = ""
         
@@ -814,8 +821,8 @@ let jogStep; //Pull for jog commands distance
         
         var content = "";
 
-        // Treat entries with blank links as errors
-        if (el.link === "") {
+        // Catch error entries
+        if (el.link == "ERROR") {
 
             content += rss_throw_error(el.title);  // Use title as error message
 
