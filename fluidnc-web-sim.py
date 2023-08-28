@@ -183,22 +183,14 @@ gresp = "[GC:G1 G54 G17 G21 G90 G94 M5 M9 T0 F1000 S0]"
 
 esp902resp = '''
 {"rss":[
-    {"title":"Feed Test.gcode",
-     "link":"http://www.mattstaniszewski.net/rss/Feed Test.gcode",
+    {"title":"turtle test4.gcode",
+     "link":"https://uc5c50d1e7ce33629a7743bf818d.dl.dropboxusercontent.com/cd/0/get/CCos7j0k8-SmXcCspAadCet_BPsvM-xpd8Vkh4mHsioTb5YzZSHYkdRy60Yc9rovKsxkUM9uFwuj05SEbsxvWCR-4X_IgaFlNN_hg0IpwtQLZHaogqb2xQEudkKGpbb0YKyv7RBwDRpvODK3zMPQUa8S9b8u4IbZlryCWXEp9AOvqQ/file",
      "updated":"1"
     }, 
-    {"title":"Orange.gcode",
-     "link":"http://www.mattstaniszewski.net/rss/Orange.gcode",
+    {"title":"turtle test5.gcode",
+     "link":"https://uca29bc2830fd3150929ed6c6764.dl.dropboxusercontent.com/cd/0/get/CCrq3p77-1GXZTdbclLW1ImVh3w3WulaRJ7GSA9IGYQfYXQk8HgrnflS7GQq1rjG-m2B9fc1ZIQ3ujSzhHys1pr550RAr45S10petcvOl4lLdndthFHtXYR2nv2uPqln8DirsUqwWHyklkss0SuovUWPMCRl94ftpezsZ5ICU7zbbQ/file",
      "updated":"0"
     },
-    {"title":"New.gcode",
-     "link":"http://www.mattstaniszewski.net/rss/New.gcode",
-     "updated":"0"
-    },
-    {"title":"Apple.gcode",
-     "link":"http://www.mattstaniszewski.net/rss/Apple.gcode",
-     "updated":"0"
-    }
 ]
 }
 '''
@@ -241,7 +233,7 @@ esp400resp = '''
       "P":"RSS/URL",
       "H":"RSS/URL",
       "T":"S",
-      "V":"https://mattstaniszewski.net/rss/",
+      "V":"http://rss.bantamtools.com/",
       "S":"2083",
       "M":"0"
     },
