@@ -259,6 +259,11 @@ let jogStep; //Pull for jog commands distance
                 var e = JSON.stringify(t, null, " ");
                 Monitor_output = Monitor_output.concat(e + "\n")
             } catch (e) { Monitor_output = Monitor_output.concat(t.toString() + "\n") } Monitor_output = Monitor_output.slice(-300)
+
+            // Trigger on RSS events
+            if (t.startsWith("[MSG:RSS")) {
+                rss_refreshFeed();
+            }
         }
         var n, a = "",
             i = id("monitor_enable_verbose_mode").checked;
@@ -643,7 +648,7 @@ let jogStep; //Pull for jog commands distance
 
     function init_files_panel(e) { displayInline("files_refresh_btn"), displayNone("files_refresh_primary_sd_btn"), displayNone("files_refresh_secondary_sd_btn"), files_set_button_as_filter(files_filter_sd_list), direct_sd && (void 0 !== e ? e : !0) && files_refreshFiles(files_currentPath) }
 
-    function init_rss_panel(e) { displayInline("rss_refresh_btn"), rss_refreshFeed() }
+    function init_rss_panel(e) { displayInline("rss_refresh_btn"), syncRssFeed() }
 
     function files_set_button_as_filter(e) { id("files_filter_glyph").innerHTML = get_icon_svg(e ? "list-alt" : "filter", "1em", "1em") }
 
@@ -710,9 +715,7 @@ let jogStep; //Pull for jog commands distance
         files_currentPath = e, current_source != last_source && (e = files_currentPath = "/", last_source = current_source), (current_source == tft_sd || current_source == tft_usb ? displayNone : displayBlock)("print_upload_btn"), void 0 === t && (t = !1), id("files_currentPath").innerHTML = files_currentPath, files_file_list = [], files_build_display_filelist(!(files_status_list = [])), displayBlock("files_list_loader"), displayBlock("files_nav_loader"), direct_sd && SendGetHttp("/upload?path=" + encodeURI(n), files_list_success, files_list_failed)
     }
 
-    async function rss_refreshFeed(e) { 
-        syncRssFeed();
-        await new Promise(r => setTimeout(r, 2000));  // Wait for ESP side to update the feed
+    function rss_refreshFeed(e) { 
         displayBlock("rss_list_loader");
         SendGetHttp("/command?plain=" + encodeURIComponent("[ESP902]"), getRssFeedSuccess);
     }
@@ -1803,12 +1806,6 @@ let jogStep; //Pull for jog commands distance
         return t
     }
 
-    var rssRefreshTimeSec = 86400;  // 24 hours
-    var rssTimer =  setInterval(function(){
-                        rss_refreshFeed()
-                    }, rssRefreshTimeSec * 1000)
-    var rssUrl = "http://url.com/rss"
-
     function create_setting_entry(e, t) {
         if (!is_setting_entry(e)) return t;
         var n, a = e.H,
@@ -1825,19 +1822,6 @@ let jogStep; //Pull for jog commands distance
             }
         var i = i.trim(),
             u = { index: t, F: e.F, label: a, defaultvalue: i, cmd: o, Options: r, min_val: n, max_val: u, type: e.T, pos: e.P };
-
-        // Save off RSS settings to use in WebUI
-        if (u.label == "RSS/RefreshTimeSec") {
-            rssRefreshTimeSec = u.defaultvalue;
-            clearInterval(rssTimer);
-            rssTimer =  setInterval(function(){
-                            rss_refreshFeed()
-                        }, rssRefreshTimeSec * 1000)
-        
-        } else if (u.label == "RSS/URL") {
-            rssUrl = u.defaultvalue;
-            rss_refreshFeed();  // Do an immediate refresh once we have an updated URL
-        }
         return scl.push(u), ++t
     }
 
