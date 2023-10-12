@@ -86,6 +86,13 @@ let jogStep; //Pull for jog commands distance
         var a = setactiveModal("alertdlg.html", n);
         null != a && (n = a.element.getElementsByClassName("modal-title")[0], a = a.element.getElementsByClassName("modal-text")[0], n.innerHTML = e, a.innerHTML = t, showModal())
     }
+
+    async function infodlg(e, t, n) {
+        var a = setactiveModal("infodlg.html", n);
+        null != a && (n = a.element.getElementsByClassName("modal-title")[0], a = a.element.getElementsByClassName("modal-text")[0], n.innerHTML = e, a.innerHTML = t, showModal())
+        await new Promise(r => setTimeout(r, 5000));
+        closeModal("ok");
+    }
     var ESP3D_authentication = !1,
         page_id = "",
         convertDHT2Fahrenheit = !1,
@@ -191,7 +198,7 @@ let jogStep; //Pull for jog commands distance
 
     function initUI_3() { AddCmd(display_boot_progress), console.log("Get macros"), init_controls_panel(), init_grbl_panel(), console.log("Get preferences"), getpreferenceslist(), initUI_4() }
 
-    function initUI_4() { AddCmd(display_boot_progress), init_command_panel(), init_files_panel(!1), "???" == target_firmware ? (console.log("Launch Setup"), AddCmd(display_boot_progress), closeModal("Connection successful"), setupdlg()) : (do_not_build_settings = !(setup_is_done = !0), AddCmd(display_boot_progress), build_HTML_setting_list(current_setting_filter), AddCmd(closeModal), AddCmd(show_main_UI)) }
+    function initUI_4() { AddCmd(display_boot_progress), init_command_panel(), init_files_panel(!1), init_rss_panel(!1), "???" == target_firmware ? (console.log("Launch Setup"), AddCmd(display_boot_progress), closeModal("Connection successful"), setupdlg()) : (do_not_build_settings = !(setup_is_done = !0), AddCmd(display_boot_progress), build_HTML_setting_list(current_setting_filter), AddCmd(closeModal), AddCmd(show_main_UI)) }
 
     function show_main_UI() { displayUndoNone("main_ui") }
 
@@ -252,6 +259,11 @@ let jogStep; //Pull for jog commands distance
                 var e = JSON.stringify(t, null, " ");
                 Monitor_output = Monitor_output.concat(e + "\n")
             } catch (e) { Monitor_output = Monitor_output.concat(t.toString() + "\n") } Monitor_output = Monitor_output.slice(-300)
+
+            // Trigger on RSS events
+            if (t.startsWith("[MSG:RSS")) {
+                rss_refreshFeed();
+            }
         }
         var n, a = "",
             i = id("monitor_enable_verbose_mode").checked;
@@ -648,6 +660,8 @@ let jogStep; //Pull for jog commands distance
 
     function init_files_panel(e) { displayInline("files_refresh_btn"), displayNone("files_refresh_primary_sd_btn"), displayNone("files_refresh_secondary_sd_btn"), files_set_button_as_filter(files_filter_sd_list), direct_sd && (void 0 !== e ? e : !0) && files_refreshFiles(files_currentPath) }
 
+    function init_rss_panel(e) { displayInline("rss_refresh_btn"), syncRssFeed() }
+
     function files_set_button_as_filter(e) { id("files_filter_glyph").innerHTML = get_icon_svg(e ? "list-alt" : "filter", "1em", "1em") }
 
     function files_filter_button(e) { files_set_button_as_filter(files_filter_sd_list = !files_filter_sd_list), files_build_display_filelist() }
@@ -713,6 +727,39 @@ let jogStep; //Pull for jog commands distance
         files_currentPath = e, current_source != last_source && (e = files_currentPath = "/", last_source = current_source), (current_source == tft_sd || current_source == tft_usb ? displayNone : displayBlock)("print_upload_btn"), void 0 === t && (t = !1), id("files_currentPath").innerHTML = files_currentPath, files_file_list = [], files_build_display_filelist(!(files_status_list = [])), displayBlock("files_list_loader"), displayBlock("files_nav_loader"), direct_sd && SendGetHttp("/upload?path=" + encodeURI(n), files_list_success, files_list_failed)
     }
 
+    function rss_refreshFeed(e) { 
+        displayBlock("rss_list_loader");
+        SendGetHttp("/command?plain=" + encodeURIComponent("[ESP902]"), getRssFeedSuccess);
+    }
+
+    function getRssFeedSuccess(e) {
+        process_rss_answer(e)
+        displayNone("rss_list_loader")
+    }
+
+    var rss_feed = []
+    function process_rss_answer(e) {
+        var t = !0;
+        rss_feed = [];
+        try {
+            var n = JSON.parse(e);
+            if (void 0 === n.rss) t = !1, console.log("No RSS");
+            else if (0 < n.rss.length) {
+                for (var a = 0, i = 0; i < n.rss.length; i++) a = create_rss_entry(n.rss[i], a);
+                0 < a ? (rss_build_display_feed()) : t = !1
+            } else t = !1
+        } catch (e) { console.error("Parsing error:", e), t = !1 }
+        return t
+    }
+
+    function is_rss_entry(e) { return void 0 !== e.title && void 0 !== e.link && void 0 !== e.updated }
+
+    function create_rss_entry(e, t) {
+        if (!is_rss_entry(e)) return t;
+        var u = { title: e.title, link: e.link, updated: parseInt(e.updated) };
+        return rss_feed.push(u), ++t
+    }
+
     function files_format_size(e) { e = parseInt(e); return e < 1024 ? e + " B" : e < 1048576 ? (e / 1024).toFixed(2) + " KB" : e < 1073741824 ? (e / 1024 / 1024).toFixed(2) + " MB" : (e / 1024 / 1024 / 1024).toFixed(2) + " GB" }
 
     function files_is_filename(e) {
@@ -764,6 +811,69 @@ let jogStep; //Pull for jog commands distance
         for (var n = 0; n < files_file_list.length; n++) 0 == files_file_list[n].isdir && (t += files_build_file_line(n));
         for (n = 0; n < files_file_list.length; n++) files_file_list[n].isdir && (t += files_build_file_line(n));
         displayBlock("files_fileList"), id("files_fileList").innerHTML = t, 0 == files_status_list.length && "" != files_error_status && files_status_list.push({ status: files_error_status, path: files_currentPath, used: "-1", total: "-1", occupation: "-1" }), 0 < files_status_list.length ? ("-1" != files_status_list[0].total ? (id("files_sd_status_total").innerHTML = files_status_list[0].total, id("files_sd_status_used").innerHTML = files_status_list[0].used, id("files_sd_status_occupation").value = files_status_list[0].occupation, id("files_sd_status_percent").innerHTML = files_status_list[0].occupation, displayTable("files_space_sd_status")) : displayNone("files_space_sd_status"), "" == files_error_status || "ok" != files_status_list[0].status.toLowerCase() && 0 != files_status_list[0].status.length || (files_status_list[0].status = files_error_status), files_error_status = "", "ok" != files_status_list[0].status.toLowerCase() ? (id("files_sd_status_msg").innerHTML = translate_text_item(files_status_list[0].status, !0), displayTable("files_status_sd_status")) : displayNone("files_status_sd_status")) : displayNone("files_space_sd_status")
+    }
+
+    function syncRssFeed() { SendGetHttp("/command?plain=" + encodeURIComponent("[ESP901]plain")) } 
+
+    function rss_throw_error(msg) {
+        var content = ""
+        
+        content += "<li class='list-group-item list-group-hover' >";
+        content += "<div class='row'>";
+        content += "<div class='col-md-11 col-sm-11 no_overflow' ";
+        content += "><table><tr><td><span  style='color:Red;'>"
+        content += get_icon_svg("warning-sign");
+        content += "</span ></td><td>&nbsp;";
+        content += msg;
+        content += "</td></tr></table></div>";
+        content += "</div>";
+        content += "</li>";
+
+        return content;
+    }
+
+    function rss_build_feed_line(el) {
+        
+        var content = "";
+
+        // Catch error entries
+        if (el.link == "ERROR") {
+
+            content += rss_throw_error(el.title);  // Use title as error message
+
+        } else {
+
+            if (el.updated)
+                content += "<li class='list-group-item-new list-group-hover' >";
+            else
+                content += "<li class='list-group-item list-group-hover' >";
+            content += "<div class='row'>";
+            content += "<div class='col-md-5 col-sm-5 no_overflow' ";
+            content += "><table><tr><td><span  style='color:DeepSkyBlue;'>";
+            content += get_icon_svg("file");
+            content += "</span ></td><td><a href='";
+            content += el.link;
+            content += "'>"
+            content += el.title;
+            content += "</a>"
+            if (el.updated)
+                content += "  *NEW*";
+            content += "</td></tr></table></div>";
+            content += "</div>";
+            content += "</li>";
+        }
+
+        return content;
+    }
+
+    function rss_build_display_feed() {
+
+        var t = ""
+        rss_feed.forEach(el => {
+            t += rss_build_feed_line(el);
+        });
+        
+        displayBlock("rss_feedList"), id("rss_feedList").innerHTML = t
     }
 
     function files_abort() { SendPrinterCommand("abort") }
@@ -1658,6 +1768,7 @@ let jogStep; //Pull for jog commands distance
         for (var e = 0; e < scl.length; e++) switch (scl[e].pos) {
             case "850":
                 direct_sd = 1 == defval(e), update_UI_firmware_target(), init_files_panel(!1);
+                init_rss_panel(!1);
                 break;
             case "130":
                 Set_page_title(defval(e))

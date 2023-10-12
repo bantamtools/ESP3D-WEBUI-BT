@@ -4843,6 +4843,8 @@ a.badge:hover {
     cursor: pointer
 }
 
+
+
 .list-group-item.active>.badge,
 .nav-pills>.active>a>.badge {
     color: #337ab7;
@@ -5142,31 +5144,42 @@ a.badge:hover {
     border: 1px solid #ddd
 }
 
+.list-group-item-new {
+    position: relative;
+    display: block;
+    padding: 10px 15px;
+    margin-bottom: -1px;
+    background-color: #99ffff;
+    border: 1px solid #ddd
+}
+
+.list-group-item-new:first-child,
 .list-group-item:first-child {
     border-top-right-radius: 4px;
     border-top-left-radius: 4px
 }
 
+.list-group-item-new:last-child,
 .list-group-item:last-child {
     margin-bottom: 0;
     border-bottom-right-radius: 4px;
     border-bottom-left-radius: 4px
 }
 
-a.list-group-item,
-button.list-group-item {
+a.list-group-item .list-group-item-new,
+button.list-group-item .list-group-item-new {
     color: #555
 }
 
-a.list-group-item .list-group-item-heading,
-button.list-group-item .list-group-item-heading {
+a.list-group-item .list-group-item-heading .list-group-item-new,
+button.list-group-item .list-group-item-heading .list-group-item-new {
     color: #333
 }
 
-a.list-group-item:focus,
-a.list-group-item:hover,
-button.list-group-item:focus,
-button.list-group-item:hover {
+a.list-group-item:focus .list-group-item-new:focus,
+a.list-group-item:hover .list-group-item-new:hover,
+button.list-group-item:focus .list-group-item-new:focus,
+button.list-group-item:hover .list-group-item-new:hover {
     text-decoration: none;
     color: #555;
     background-color: #f5f5f5
@@ -7233,7 +7246,7 @@ select:disabled {
     color: white
     /* margin-left: 10px; Adds some spacing between the button and label */
 }
-.container {
+.pen-offset-container {
     margin-top: 10px; /* Adds some spacing between the dropdown and the number input */
     display: flex;
     align-items: center;

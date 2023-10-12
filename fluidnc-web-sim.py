@@ -181,6 +181,34 @@ sdfiles = '{"files":[{"name":"localfs","shortname":"localfs","size":"-1","dateti
 
 gresp = "[GC:G1 G54 G17 G21 G90 G94 M5 M9 T0 F1000 S0]"
 
+esp902resp = '''
+{"rss":[
+    {"title":"turtle test4.gcode",
+     "link":"https://uc5c50d1e7ce33629a7743bf818d.dl.dropboxusercontent.com/cd/0/get/CCos7j0k8-SmXcCspAadCet_BPsvM-xpd8Vkh4mHsioTb5YzZSHYkdRy60Yc9rovKsxkUM9uFwuj05SEbsxvWCR-4X_IgaFlNN_hg0IpwtQLZHaogqb2xQEudkKGpbb0YKyv7RBwDRpvODK3zMPQUa8S9b8u4IbZlryCWXEp9AOvqQ/file",
+     "updated":"1"
+    }, 
+    {"title":"turtle test5.gcode",
+     "link":"https://uca29bc2830fd3150929ed6c6764.dl.dropboxusercontent.com/cd/0/get/CCrq3p77-1GXZTdbclLW1ImVh3w3WulaRJ7GSA9IGYQfYXQk8HgrnflS7GQq1rjG-m2B9fc1ZIQ3ujSzhHys1pr550RAr45S10petcvOl4lLdndthFHtXYR2nv2uPqln8DirsUqwWHyklkss0SuovUWPMCRl94ftpezsZ5ICU7zbbQ/file",
+     "updated":"0"
+    },
+]
+}
+'''
+
+"""
+esp902resp = '''
+{"rss":[
+    {"title":"Error: Connection failed",
+     "link":"",
+     "updated":"0"
+    }
+]
+}
+'''
+"""
+
+esp900resp = '1692914269'
+
 esp800resp = 'FW version: FluidNC v3.6.7 (Devt-5692a7c1-dirty) # FW target:grbl-embedded  # FW HW:Direct SD  # primary sd:/sd # secondary sd:none  # authentication:no # webcommunication: Sync: ' + fluidnc_websocket() + ' # hostname:fluidnc # axis:3'
 
 esp400resp = '''
@@ -191,6 +219,22 @@ esp400resp = '''
       "T":"S",
       "V":"",
       "S":"20",
+      "M":"0"
+    },
+    {"F":"nvs",
+      "P":"RSS/RefreshTimeSec",
+      "H":"RSS/RefreshTimeSec",
+      "T":"I",
+      "V":"30",
+      "S":"604800",
+      "M":"0"
+    },
+    {"F":"nvs",
+      "P":"RSS/URL",
+      "H":"RSS/URL",
+      "T":"S",
+      "V":"http://rss.bantamtools.com/",
+      "S":"2083",
       "M":"0"
     },
     {"F":"tree",
@@ -254,15 +298,25 @@ def do_command():
 
     # If not proxying, respond to a few commands
     if plainval != None:
+        if plainval == '[ESP902]':
+            return esp902resp
+        if plainval == '[ESP900]':
+            return esp900resp
         if plainval == '[ESP400]':
             return esp400resp
-        commandtextval = request.args.get('commandText')
-        if commandtextval != None:
-            print("commandText:", commandtextval)
-            if commandtextval == '$G':
-                if len(CONNECTIONS):
-                    wsock = CONNECTIONS[0]
-                    wsock.send(gresp)
+    commandtextval = request.args.get('commandText')
+    if commandtextval != None:
+        print("commandText:", commandtextval)
+        if commandtextval == '$G':
+            if len(CONNECTIONS):
+                wsock = CONNECTIONS[0]
+                wsock.send(gresp)
+        if commandtextval == '[ESP900]':
+            return esp900resp
+        if commandtextval == '[ESP901]':
+            return 'SYNC'
+        if commandtextval == '[ESP902]':
+            return esp902resp
     return ""
 
 def handle_files(fs, request):
