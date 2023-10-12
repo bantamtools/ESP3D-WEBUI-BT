@@ -227,6 +227,208 @@
                 <div id="maintab" class="tabcontent">
                     <div class="panel-flex-col">
                         <div class="grid-container">
+                            <div id="filesPanel"
+                                class="panel panel-default panel-flex-col">
+                                <div class="panel-heading">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="pull-left">
+                                                <table>
+                                                    <tr>
+                                                        <td><b><span style="margin-left: 10px;"
+                                                                    id="fileSource"
+                                                                    translate>SD Files</span></b></td>
+                                                        <td>&nbsp;&nbsp;</td>
+                                                        <td class="tooltip"><span
+                                                                class="tooltip-text">Make
+                                                                a directory</span>
+                                                            <button
+                                                                id="files_createdir_btn"
+                                                                onclick="files_Createdir()"
+                                                                class="btn btn-info btn-xs"
+                                                                style><svg
+                                                                    width="1.5em"
+                                                                    height="1.2em"
+                                                                    viewBox="5 10 30 10">
+                                                                    <rect x="5"
+                                                                        y="10"
+                                                                        width="30"
+                                                                        height="20"
+                                                                        rx="2"
+                                                                        ry="2"
+                                                                        fill="currentColor"></rect>
+                                                                    <rect x="20"
+                                                                        y="5"
+                                                                        width="15"
+                                                                        height="15"
+                                                                        rx="2"
+                                                                        ry="2"
+                                                                        fill="currentColor"></rect><text
+                                                                        x="15"
+                                                                        y="25"
+                                                                        font-size="18"
+                                                                        font-weight="800"
+                                                                        fill="#5BC0DE">+</text>
+                                                                </svg></button>
+                                                        </td>
+                                                        <td>&nbsp;&nbsp;</td>
+                                                        <td><span
+                                                                id="files_currentPath"></span></td>
+                                                        <td>&nbsp;&nbsp;</td>
+                                                        <td>
+                                                            <div
+                                                                id="files_nav_loader"
+                                                                style="width:1em;height:1em"
+                                                                class="loader hide_it"></div>
+                                                        </td>
+                                                        <td><button style="margin-left: 15px" 
+                                                            onclick="menuHomeAll()" 
+                                                            id="homeMachineButton">Home Machine</button></td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                            <div class="hide_it pull-right"
+                                                id="files_uploading_msg">
+                                                <table>
+                                                    <tr>
+                                                        <td><span translate>Uploading</span></td>
+                                                        <td>&nbsp;</td>
+                                                        <td><span
+                                                                class="text-info"
+                                                                id="files_currentUpload_msg"></span>
+                                                        </td>
+                                                        <td>&nbsp;</td>
+                                                        <td width="100px"><progress
+                                                                name="prg"
+                                                                id="files_prg"
+                                                                max="100"></progress></td>
+                                                        <td><span
+                                                                id="files_percent_upload"></span>%</td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                            <div class="pull-right"
+                                                id="files_navigation_buttons">
+                                                <div class="item-flex-row-wrap">
+                                                    <div class="tooltip"><span
+                                                            class="tooltip-text">Show
+                                                            runnable files or
+                                                            all files</span>
+                                                        <button
+                                                            class="btn btn-xs btn-primary"
+                                                            onclick="files_filter_button(this);"><span
+                                                                id="files_filter_glyph"
+                                                                style="position:relative;top:2px"><svg
+                                                                    width="1.3em"
+                                                                    height="1.2em"
+                                                                    viewBox="0 0 1300 1200">
+                                                                    <g
+                                                                        transform="translate(50,1200) scale(1, -1)">
+                                                                        <path
+                                                                            fill="currentColor"
+                                                                            d="M150 1200h900q21 0 35.5 -14.5t14.5 -35.5t-14.5 -35.5t-35.5 -14.5h-900q-21 0 -35.5 14.5t-14.5 35.5t14.5 35.5t35.5 14.5zM700 500v-300l-200 -200v500l-350 500h900z">
+                                                                        </path>
+                                                                    </g>
+                                                                </svg></span></button>
+                                                    </div>&nbsp;
+                                                    <button
+                                                        class="btn btn-xs btn-primary hide_it"
+                                                        id="files_refresh_btn"
+                                                        onclick="files_refreshFiles(files_currentPath)"
+                                                        translate>Refresh</button>
+                                                    <button
+                                                        class="btn btn-xs btn-primary hide_it"
+                                                        id="files_refresh_primary_sd_btn"
+                                                        onclick="files_refreshFiles(primary_sd)">SD
+                                                        1</button> &nbsp;
+                                                    <button
+                                                        class="btn btn-xs btn-primary hide_it"
+                                                        id="files_refresh_secondary_sd_btn"
+                                                        onclick="files_refreshFiles(secondary_sd)">SD
+                                                        2</button> &nbsp; <span
+                                                        class="hide_it"
+                                                        id="files_refresh_printer_sd_btn"><button
+                                                            class="btn btn-xs btn-primary"
+                                                            onclick="current_source = printer_sd ;files_refreshFiles(files_currentPath)">SD</button>
+                                                        &nbsp; </span><span
+                                                        class="hide_it"
+                                                        id="files_refresh_tft_sd_btn"><button
+                                                            class="btn btn-xs btn-primary"
+                                                            onclick="current_source = tft_sd ;files_refreshFiles(files_currentPath)">TFT
+                                                            SD</button> &nbsp;
+                                                    </span><span class="hide_it"
+                                                        id="files_refresh_tft_usb_btn"><button
+                                                            class="btn btn-xs btn-primary"
+                                                            onclick="current_source = tft_usb ;files_refreshFiles(files_currentPath)">TFT
+                                                            USB</button> &nbsp;
+                                                    </span><button
+                                                        id="progress_btn"
+                                                        class="btn btn-xs btn-primary"
+                                                        onclick="files_progress()"
+                                                        translate>Progress</button>
+                                                    &nbsp; <button
+                                                        id="abort_btn"
+                                                        class="btn btn-xs btn-primary"
+                                                        onclick="files_abort()"
+                                                        translate>Abort</button>
+                                                    &nbsp; <button
+                                                        id="print_upload_btn"
+                                                        class="btn btn-xs btn-primary"
+                                                        onclick="files_select_upload()"
+                                                        translate>Upload</button>
+                                                    <input type="file"
+                                                        id="files_input_file"
+                                                        onchange="files_check_if_upload()"
+                                                        accept=" .g, .gco, .gcode, .G, .GCO, .GCODE"
+                                                        style="display:none">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="file-body"
+                                    class="panel-body panel-height panel-max-height panel-scroll panel-flex-main">
+                                    <div id="files_list_loader"
+                                        class="loader hide_it"
+                                        style="margin:auto"></div>
+                                    <ul class="list-group" id="files_fileList"></ul>
+                                </div>
+                                <div class="panel-footer panel-footer-height">
+                                    <div class="row hide_it"
+                                        id="files_space_sd_status">
+                                        <div class="col-md-12">
+                                            <div class="form-inline">
+                                                <div class="form-group"><span><span
+                                                            translate>Total:</span>&nbsp;<span
+                                                            id="files_sd_status_total"></span></span>
+                                                    <span>&nbsp;|&nbsp;</span>
+                                                    <span><span translate>Used:</span>&nbsp;<span
+                                                            id="files_sd_status_used">
+                                                        </span></span><span>&nbsp;</span>
+                                                    <span class="noshowonlowres">|
+                                                        &nbsp;</span> <span
+                                                        class="form-inline">
+                                                        <div class="form-group"><span><span
+                                                                    translate>Ocupation:</span><meter
+                                                                    id="files_sd_status_occupation"
+                                                                    style="width:150px"
+                                                                    min="0"
+                                                                    max="100"
+                                                                    high="90"
+                                                                    value="50"></meter></span><span
+                                                                id="files_sd_status_percent"></span><span>%</span></div>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row hide_it"
+                                        id="files_status_sd_status">
+                                        <div class="col-md-12"><span
+                                                id="files_sd_status_msg">Ok</span></div>
+                                    </div>
+                                </div>
+                            </div>
                             <div id="controlPanel" style="display: flex;"
                                 class="panel panel-default panel-flex-col panel-min-width">
                                 <div class="panel-heading">
@@ -277,7 +479,7 @@
                                             class="col col-md-12 col-lg-7">
                                             <button style="margin-left: 15px" 
                                             onclick="menuHomeAll()" 
-                                            id="homeMachineButton">Home All</button>
+                                            id="homeMachineButton">Home All Axis</button>
                                             <svg
                                                 width="400" height="180"
                                                 xmlns="http://www.w3.org/2000/svg"
@@ -628,7 +830,7 @@
                                     <div class="position-container" style="display: flex; justify-content: space-between;"
                                         id="positions_labels">
 
-                                        <div id="position_text_header_container" style="display: block; padding-left: 18%; text-align: left;">
+                                        <div id="position_text_header_container" style="display: block; padding-left: 37%; text-align: left;">
                                             <h4 style="color: rgb(231, 228, 228); font:bold">Machine Origins:</h4>
                                             <div id="position_text_container" style="display: flex">
                                                 <div class="position_text">
@@ -701,10 +903,10 @@
                                                     id="control_z_position_display">
                                                     <table>
                                                         <tr>
-                                                            <td><button
+                                                            <!-- <td><button
                                                                     class="btn btn-xs btn-default"
                                                                     id="zero_z_btn"
-                                                                    onclick="SendZerocommand('Z0')">&Oslash;</button></td>
+                                                                    onclick="SendZerocommand('Z0')">&Oslash;</button></td> -->
                                                             <td><span
                                                                     class="label label-default"
                                                                     style="padding:5px 5px 3px 5px"><span
@@ -712,7 +914,7 @@
                                                                         id="control_z_position">&nbsp;</span></span></td>
                                                         </tr>
                                                         <tr id="control_zm_position_row">
-                                                            <td></td>
+                                                            <!-- <td></td> -->
                                                             <td>
                                                                 <table>
                                                                     <tr
@@ -732,12 +934,12 @@
                                                 </div> 
                                             </div>
                                         </div>
-                                        <div id="pen-offset-container" style="padding-right: 18%; text-align: left;">
+                                        <!-- <div id="pen-offset-container" style="padding-right: 18%; text-align: left; display: none;">
                                             <h4 style="color: rgb(231, 228, 228); font:bold">Pen Offsets:</h4>
                                             <div id="pen-offset-div">
-                                                <!-- <button name="TEST" style="width:10px; height:15px"> 
+                                                <button name="TEST" style="width:10px; height:15px"> 
     
-                                                </button> -->
+                                                </button>
                                                 <label for="penDropdown" class="pen-dropdown">Choose a Pen:</label>
                                                     <select id="penDropdown" name="Pens">
                                                         <option value="Pen 1">Pen 1</option>
@@ -762,7 +964,7 @@
                                                             onclick="SetOffsetCommandBT()">Set</button>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> -->
                                     </div><br>
                                     <div class="position-container hide_it"
                                         id="positions_labels2">
@@ -917,205 +1119,6 @@
                                             class="btn btn-primary"
                                             onclick="control_motorsOff()"
                                             translate>Motors off</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div id="filesPanel"
-                                class="panel panel-default panel-flex-col">
-                                <div class="panel-heading">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="pull-left">
-                                                <table>
-                                                    <tr>
-                                                        <td><b><span style="margin-left: 10px;"
-                                                                    id="fileSource"
-                                                                    translate>SD Files</span></b></td>
-                                                        <td>&nbsp;&nbsp;</td>
-                                                        <td class="tooltip"><span
-                                                                class="tooltip-text">Make
-                                                                a directory</span>
-                                                            <button
-                                                                id="files_createdir_btn"
-                                                                onclick="files_Createdir()"
-                                                                class="btn btn-info btn-xs"
-                                                                style><svg
-                                                                    width="1.5em"
-                                                                    height="1.2em"
-                                                                    viewBox="5 10 30 10">
-                                                                    <rect x="5"
-                                                                        y="10"
-                                                                        width="30"
-                                                                        height="20"
-                                                                        rx="2"
-                                                                        ry="2"
-                                                                        fill="currentColor"></rect>
-                                                                    <rect x="20"
-                                                                        y="5"
-                                                                        width="15"
-                                                                        height="15"
-                                                                        rx="2"
-                                                                        ry="2"
-                                                                        fill="currentColor"></rect><text
-                                                                        x="15"
-                                                                        y="25"
-                                                                        font-size="18"
-                                                                        font-weight="800"
-                                                                        fill="#5BC0DE">+</text>
-                                                                </svg></button>
-                                                        </td>
-                                                        <td>&nbsp;&nbsp;</td>
-                                                        <td><span
-                                                                id="files_currentPath"></span></td>
-                                                        <td>&nbsp;&nbsp;</td>
-                                                        <td>
-                                                            <div
-                                                                id="files_nav_loader"
-                                                                style="width:1em;height:1em"
-                                                                class="loader hide_it"></div>
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                            </div>
-                                            <div class="hide_it pull-right"
-                                                id="files_uploading_msg">
-                                                <table>
-                                                    <tr>
-                                                        <td><span translate>Uploading</span></td>
-                                                        <td>&nbsp;</td>
-                                                        <td><span
-                                                                class="text-info"
-                                                                id="files_currentUpload_msg"></span>
-                                                        </td>
-                                                        <td>&nbsp;</td>
-                                                        <td width="100px"><progress
-                                                                name="prg"
-                                                                id="files_prg"
-                                                                max="100"></progress></td>
-                                                        <td><span
-                                                                id="files_percent_upload"></span>%</td>
-                                                    </tr>
-                                                </table>
-                                            </div>
-                                            <div class="pull-right"
-                                                id="files_navigation_buttons">
-                                                <div class="item-flex-row-wrap">
-                                                    <div class="tooltip"><span
-                                                            class="tooltip-text">Show
-                                                            runnable files or
-                                                            all files</span>
-                                                        <button
-                                                            class="btn btn-xs btn-primary"
-                                                            onclick="files_filter_button(this);"><span
-                                                                id="files_filter_glyph"
-                                                                style="position:relative;top:2px"><svg
-                                                                    width="1.3em"
-                                                                    height="1.2em"
-                                                                    viewBox="0 0 1300 1200">
-                                                                    <g
-                                                                        transform="translate(50,1200) scale(1, -1)">
-                                                                        <path
-                                                                            fill="currentColor"
-                                                                            d="M150 1200h900q21 0 35.5 -14.5t14.5 -35.5t-14.5 -35.5t-35.5 -14.5h-900q-21 0 -35.5 14.5t-14.5 35.5t14.5 35.5t35.5 14.5zM700 500v-300l-200 -200v500l-350 500h900z">
-                                                                        </path>
-                                                                    </g>
-                                                                </svg></span></button>
-                                                    </div>&nbsp;
-                                                    <button
-                                                        class="btn btn-xs btn-primary hide_it"
-                                                        id="files_refresh_btn"
-                                                        onclick="files_refreshFiles(files_currentPath)"
-                                                        translate>Refresh</button>
-                                                    <button
-                                                        class="btn btn-xs btn-primary hide_it"
-                                                        id="files_refresh_primary_sd_btn"
-                                                        onclick="files_refreshFiles(primary_sd)">SD
-                                                        1</button> &nbsp;
-                                                    <button
-                                                        class="btn btn-xs btn-primary hide_it"
-                                                        id="files_refresh_secondary_sd_btn"
-                                                        onclick="files_refreshFiles(secondary_sd)">SD
-                                                        2</button> &nbsp; <span
-                                                        class="hide_it"
-                                                        id="files_refresh_printer_sd_btn"><button
-                                                            class="btn btn-xs btn-primary"
-                                                            onclick="current_source = printer_sd ;files_refreshFiles(files_currentPath)">SD</button>
-                                                        &nbsp; </span><span
-                                                        class="hide_it"
-                                                        id="files_refresh_tft_sd_btn"><button
-                                                            class="btn btn-xs btn-primary"
-                                                            onclick="current_source = tft_sd ;files_refreshFiles(files_currentPath)">TFT
-                                                            SD</button> &nbsp;
-                                                    </span><span class="hide_it"
-                                                        id="files_refresh_tft_usb_btn"><button
-                                                            class="btn btn-xs btn-primary"
-                                                            onclick="current_source = tft_usb ;files_refreshFiles(files_currentPath)">TFT
-                                                            USB</button> &nbsp;
-                                                    </span><button
-                                                        id="progress_btn"
-                                                        class="btn btn-xs btn-primary"
-                                                        onclick="files_progress()"
-                                                        translate>Progress</button>
-                                                    &nbsp; <button
-                                                        id="abort_btn"
-                                                        class="btn btn-xs btn-primary"
-                                                        onclick="files_abort()"
-                                                        translate>Abort</button>
-                                                    &nbsp; <button
-                                                        id="print_upload_btn"
-                                                        class="btn btn-xs btn-primary"
-                                                        onclick="files_select_upload()"
-                                                        translate>Upload</button>
-                                                    <input type="file"
-                                                        id="files_input_file"
-                                                        onchange="files_check_if_upload()"
-                                                        accept=" .g, .gco, .gcode, .G, .GCO, .GCODE"
-                                                        style="display:none">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="file-body"
-                                    class="panel-body panel-height panel-max-height panel-scroll panel-flex-main">
-                                    <div id="files_list_loader"
-                                        class="loader hide_it"
-                                        style="margin:auto"></div>
-                                    <ul class="list-group" id="files_fileList"></ul>
-                                </div>
-                                <div class="panel-footer panel-footer-height">
-                                    <div class="row hide_it"
-                                        id="files_space_sd_status">
-                                        <div class="col-md-12">
-                                            <div class="form-inline">
-                                                <div class="form-group"><span><span
-                                                            translate>Total:</span>&nbsp;<span
-                                                            id="files_sd_status_total"></span></span>
-                                                    <span>&nbsp;|&nbsp;</span>
-                                                    <span><span translate>Used:</span>&nbsp;<span
-                                                            id="files_sd_status_used">
-                                                        </span></span><span>&nbsp;</span>
-                                                    <span class="noshowonlowres">|
-                                                        &nbsp;</span> <span
-                                                        class="form-inline">
-                                                        <div class="form-group"><span><span
-                                                                    translate>Ocupation:</span><meter
-                                                                    id="files_sd_status_occupation"
-                                                                    style="width:150px"
-                                                                    min="0"
-                                                                    max="100"
-                                                                    high="90"
-                                                                    value="50"></meter></span><span
-                                                                id="files_sd_status_percent"></span><span>%</span></div>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row hide_it"
-                                        id="files_status_sd_status">
-                                        <div class="col-md-12"><span
-                                                id="files_sd_status_msg">Ok</span></div>
                                     </div>
                                 </div>
                             </div>
@@ -2245,7 +2248,7 @@
                         <div class="loader hide_it" id="settings_loader"></div>
                         <div class="container hide_it"
                             id="settings_list_content"><span
-                                id="settings_filters">
+                                id="settings_filters" style="justify-content: center; display: flex; align-items: center; flex-wrap: wrap;">
                                 <div class="radio-inline tooltip"><span
                                         class="tooltip-text">Settings that are
                                         saved immediately</span> <label><input
@@ -2256,12 +2259,14 @@
                                 <div class="radio-inline tooltip"><span
                                         class="tooltip-text">Settings from the
                                         config file, saved only on command</span>
-                                    <label><input type="radio"
-                                            id="tree_setting_filter"
-                                            name="setting_filter"
-                                            value="configfile"
-                                            onclick="build_HTML_setting_list('tree')">
-                                        <span translate>Config Items</span></label>
+                                        <label>
+                                            <input type="radio" 
+                                                   id="tree_setting_filter" 
+                                                   name="setting_filter" 
+                                                   value="configfile" 
+                                                   onclick="confirmSelection()">
+                                            <span translate>Config Items</span>
+                                        </label>
                                 </div>
                             </span>
                             <table
