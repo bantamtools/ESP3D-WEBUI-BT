@@ -309,9 +309,9 @@ function update_UI_firmware_target() {
     id('tab_title_configuration').innerHTML = "<span translate>GRBL configuration</span>";
     id('tab_printer_configuration').innerHTML = "<span translate>GRBL</span>";
     id('files_input_file').accept = " .g, .gco, .gcode, .txt, .ncc, .G, .GCO, .GCODE, .TXT, .NC";
-    displayInitial('zero_xyz_btn');
-    displayInitial('zero_x_btn');
-    displayInitial('zero_y_btn');
+    displayNone('zero_xyz_btn');
+    displayNone('zero_x_btn');
+    displayNone('zero_y_btn');
     if (grblaxis >2) {
         //displayInitial('control_z_position_display');
         id('control_z_position_label').innerHTML = "Zw";

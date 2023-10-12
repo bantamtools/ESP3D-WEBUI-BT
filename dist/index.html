@@ -227,6 +227,328 @@
                 <div id="maintab" class="tabcontent">
                     <div class="panel-flex-col">
                         <div class="grid-container">
+                            <div id="filesPanel"
+                                class="panel panel-default panel-flex-col">
+                                <div class="panel-heading">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="pull-left">
+                                                <table>
+                                                    <tr>
+                                                        <td><b><span style="margin-left: 10px;"
+                                                                    id="fileSource"
+                                                                    translate>SD Files</span></b></td>
+                                                        <td>&nbsp;&nbsp;</td>
+                                                        <td class="tooltip"><span
+                                                                class="tooltip-text">Make
+                                                                a directory</span>
+                                                            <button
+                                                                id="files_createdir_btn"
+                                                                onclick="files_Createdir()"
+                                                                class="btn btn-info btn-xs"
+                                                                style><svg
+                                                                    width="1.5em"
+                                                                    height="1.2em"
+                                                                    viewBox="5 10 30 10">
+                                                                    <rect x="5"
+                                                                        y="10"
+                                                                        width="30"
+                                                                        height="20"
+                                                                        rx="2"
+                                                                        ry="2"
+                                                                        fill="currentColor"></rect>
+                                                                    <rect x="20"
+                                                                        y="5"
+                                                                        width="15"
+                                                                        height="15"
+                                                                        rx="2"
+                                                                        ry="2"
+                                                                        fill="currentColor"></rect><text
+                                                                        x="15"
+                                                                        y="25"
+                                                                        font-size="18"
+                                                                        font-weight="800"
+                                                                        fill="#5BC0DE">+</text>
+                                                                </svg></button>
+                                                        </td>
+                                                        <td>&nbsp;&nbsp;</td>
+                                                        <td><span
+                                                                id="files_currentPath"></span></td>
+                                                        <td>&nbsp;&nbsp;</td>
+                                                        <td>
+                                                            <div
+                                                                id="files_nav_loader"
+                                                                style="width:1em;height:1em"
+                                                                class="loader hide_it"></div>
+                                                        </td>
+                                                        <td><button style="margin-left: 15px" 
+                                                            onclick="menuHomeAll()" 
+                                                            id="homeMachineButton">Home Machine</button></td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                            <div class="hide_it pull-right"
+                                                id="files_uploading_msg">
+                                                <table>
+                                                    <tr>
+                                                        <td><span translate>Uploading</span></td>
+                                                        <td>&nbsp;</td>
+                                                        <td><span
+                                                                class="text-info"
+                                                                id="files_currentUpload_msg"></span>
+                                                        </td>
+                                                        <td>&nbsp;</td>
+                                                        <td width="100px"><progress
+                                                                name="prg"
+                                                                id="files_prg"
+                                                                max="100"></progress></td>
+                                                        <td><span
+                                                                id="files_percent_upload"></span>%</td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                            <div class="pull-right"
+                                                id="files_navigation_buttons">
+                                                <div class="item-flex-row-wrap">
+                                                    <div class="tooltip"><span
+                                                            class="tooltip-text">Show
+                                                            runnable files or
+                                                            all files</span>
+                                                        <button
+                                                            class="btn btn-xs btn-primary"
+                                                            onclick="files_filter_button(this);"><span
+                                                                id="files_filter_glyph"
+                                                                style="position:relative;top:2px"><svg
+                                                                    width="1.3em"
+                                                                    height="1.2em"
+                                                                    viewBox="0 0 1300 1200">
+                                                                    <g
+                                                                        transform="translate(50,1200) scale(1, -1)">
+                                                                        <path
+                                                                            fill="currentColor"
+                                                                            d="M150 1200h900q21 0 35.5 -14.5t14.5 -35.5t-14.5 -35.5t-35.5 -14.5h-900q-21 0 -35.5 14.5t-14.5 35.5t14.5 35.5t35.5 14.5zM700 500v-300l-200 -200v500l-350 500h900z">
+                                                                        </path>
+                                                                    </g>
+                                                                </svg></span></button>
+                                                    </div>&nbsp;
+                                                    <button
+                                                        class="btn btn-xs btn-primary hide_it"
+                                                        id="files_refresh_btn"
+                                                        onclick="files_refreshFiles(files_currentPath)"
+                                                        translate>Refresh</button>
+                                                    <button
+                                                        class="btn btn-xs btn-primary hide_it"
+                                                        id="files_refresh_primary_sd_btn"
+                                                        onclick="files_refreshFiles(primary_sd)">SD
+                                                        1</button> &nbsp;
+                                                    <button
+                                                        class="btn btn-xs btn-primary hide_it"
+                                                        id="files_refresh_secondary_sd_btn"
+                                                        onclick="files_refreshFiles(secondary_sd)">SD
+                                                        2</button> &nbsp; <span
+                                                        class="hide_it"
+                                                        id="files_refresh_printer_sd_btn"><button
+                                                            class="btn btn-xs btn-primary"
+                                                            onclick="current_source = printer_sd ;files_refreshFiles(files_currentPath)">SD</button>
+                                                        &nbsp; </span><span
+                                                        class="hide_it"
+                                                        id="files_refresh_tft_sd_btn"><button
+                                                            class="btn btn-xs btn-primary"
+                                                            onclick="current_source = tft_sd ;files_refreshFiles(files_currentPath)">TFT
+                                                            SD</button> &nbsp;
+                                                    </span><span class="hide_it"
+                                                        id="files_refresh_tft_usb_btn"><button
+                                                            class="btn btn-xs btn-primary"
+                                                            onclick="current_source = tft_usb ;files_refreshFiles(files_currentPath)">TFT
+                                                            USB</button> &nbsp;
+                                                    </span><button
+                                                        id="progress_btn"
+                                                        class="btn btn-xs btn-primary"
+                                                        onclick="files_progress()"
+                                                        translate>Progress</button>
+                                                    &nbsp; <button
+                                                        id="abort_btn"
+                                                        class="btn btn-xs btn-primary"
+                                                        onclick="files_abort()"
+                                                        translate>Abort</button>
+                                                    &nbsp; <button
+                                                        id="print_upload_btn"
+                                                        class="btn btn-xs btn-primary"
+                                                        onclick="files_select_upload()"
+                                                        translate>Upload</button>
+                                                    <input type="file"
+                                                        id="files_input_file"
+                                                        onchange="files_check_if_upload()"
+                                                        accept=" .g, .gco, .gcode, .G, .GCO, .GCODE"
+                                                        style="display:none">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <table width="100%" style="padding: 20px">
+                                    <tr>
+                                        <td class="td_center" style="padding: 20px">
+                                            <table>
+                                                <tr>
+                                                    <td><button
+                                                            id="clear_status_btn"
+                                                            class="btn btn-default btn-xs hide-it tooltip"
+                                                            onclick="SendPrinterCommand('$X', true, null,null, 114, 1);"
+                                                            style="padding:5px 5px 0 5px"><span
+                                                                class="tooltip-text">Clear
+                                                                Alarm</span>
+                                                            <svg
+                                                                width="2em"
+                                                                height="1.8em"
+                                                                viewBox="-200 -200 1700 1600">
+                                                                <g
+                                                                    transform="translate(50,1200) scale(1, -1)">
+                                                                    <path
+                                                                        fill="black"
+                                                                        d="M553 1200h94q20 0 29 -10.5t3 -29.5l-18 -37q83 -19 144 -82.5t76 -140.5l63 -327l118 -173h17q19 0 33 -14.5t14 -35t-13 -40.5t-31 -27q-8 -4 -23 -9.5t-65 -19.5t-103 -25t-132.5 -20t-158.5 -9q-57 0 -115 5t-104 12t-88.5 15.5t-73.5 17.5t-54.5 16t-35.5 12l-11 4 q-18 8 -31 28t-13 40.5t14 35t33 14.5h17l118 173l63 327q15 77 76 140t144 83l-18 32q-6 19 3.5 32t28.5 13zM498 110q50 -6 102 -6q53 0 102 6q-12 -49 -39.5 -79.5t-62.5 -30.5t-63 30.5t-39 79.5z">
+                                                                    </path>
+                                                                    <circle
+                                                                        cx="600"
+                                                                        cy="600"
+                                                                        r="700"
+                                                                        stroke="red"
+                                                                        stroke-width="100"
+                                                                        fill="none"></circle>
+                                                                    <line
+                                                                        x1="106"
+                                                                        y1="106"
+                                                                        x2="1094"
+                                                                        y2="1094"
+                                                                        stroke="red"
+                                                                        stroke-width="100"></line>
+                                                                </g>
+                                                            </svg></button></td>
+                                                    <td
+                                                        style="text-align:left;width:100%;height:30px">
+                                                        <div
+                                                            id="grbl_status"
+                                                            class="status_text"></div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="2"
+                                                        style="text-align:left;height:20px"
+                                                        id="grbl_status_text"></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td style="padding: 20px">
+                                            <table>
+                                                <tr>
+                                                    <td
+                                                        style="width:100%;height:2em"></td>
+                                                    <td><button
+                                                            id="sd_pause_btn"
+                                                            class="btn btn-default hide_it"
+                                                            onclick="SendRealtimeCmd(0x21);"
+                                                            style="padding:5px 4px 0 5px"><svg
+                                                                width="2em"
+                                                                height="1.4em"
+                                                                viewBox="0 0 1300 1200">
+                                                                <g
+                                                                    transform="translate(50,1200) scale(1, -1)">
+                                                                    <path
+                                                                        fill="blue"
+                                                                        d="M250 1000h200q21 0 35.5 -14.5t14.5 -35.5v-800q0 -21 -14.5 -35.5t-35.5 -14.5h-200q-21 0 -35.5 14.5t-14.5 35.5v800q0 21 14.5 35.5t35.5 14.5zM650 1000h200q21 0 35.5 -14.5t14.5 -35.5v-800q0 -21 -14.5 -35.5t-35.5 -14.5h-200q-21 0 -35.5 14.5t-14.5 35.5v800 q0 21 14.5 35.5t35.5 14.5z">
+                                                                    </path>
+                                                                </g>
+                                                            </svg></button></td>
+                                                    <td>&nbsp;</td>
+                                                    <td><button
+                                                            id="sd_resume_btn"
+                                                            class="btn btn-default hide_it"
+                                                            onclick="SendRealtimeCmd(0x7e);"
+                                                            style="padding:5px 4px 0 5px"><svg
+                                                                width="2em"
+                                                                height="1.4em"
+                                                                viewBox="0 0 1300 1200">
+                                                                <g
+                                                                    transform="translate(50,1200) scale(1, -1)">
+                                                                    <path
+                                                                        fill="green"
+                                                                        d="M243 1074l814 -498q18 -11 18 -26t-18 -26l-814 -498q-18 -11 -30.5 -4t-12.5 28v1000q0 21 12.5 28t30.5 -4z">
+                                                                    </path>
+                                                                </g>
+                                                            </svg></button></td>
+                                                    <td>&nbsp;</td>
+                                                    <td><button
+                                                            id="sd_reset_btn"
+                                                            class="btn btn-danger hide_it"
+                                                            onclick="grbl_reset();"
+                                                            style="padding:5px 0 0 0"><svg
+                                                                width="2em"
+                                                                height="1.4em"
+                                                                viewBox="0 0 1200 1200">
+                                                                <g
+                                                                    transform="translate(1200,1200) scale(-1, -1)">
+                                                                    <path
+                                                                        fill="white"
+                                                                        d="M947 1060l135 135q7 7 12.5 5t5.5 -13v-362q0 -10 -7.5 -17.5t-17.5 -7.5h-362q-11 0 -13 5.5t5 12.5l133 133q-109 76 -238 76q-116 0 -214.5 -57t-155.5 -155.5t-57 -214.5t57 -214.5t155.5 -155.5t214.5 -57t214.5 57t155.5 155.5t57 214.5h150q0 -117 -45.5 -224 t-123 -184.5t-184.5 -123t-224 -45.5t-224 45.5t-184.5 123t-123 184.5t-45.5 224t45.5 224t123 184.5t184.5 123t224 45.5q192 0 347 -117z">
+                                                                    </path>
+                                                                </g>
+                                                            </svg></button></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2"
+                                            class="td_center">
+                                            <center>
+                                                <div id="grbl_SD_status"></div>
+                                            </center>
+                                        </td>
+                                    </tr>
+                                </table><br>
+                                <div id="file-body"
+                                    class="panel-body panel-height panel-max-height panel-scroll panel-flex-main">
+                                    <div id="files_list_loader"
+                                        class="loader hide_it"
+                                        style="margin:auto"></div>
+                                    <ul class="list-group" id="files_fileList"></ul>
+                                </div>
+                                <div class="panel-footer panel-footer-height">
+                                    <div class="row hide_it"
+                                        id="files_space_sd_status">
+                                        <div class="col-md-12">
+                                            <div class="form-inline">
+                                                <div class="form-group"><span><span
+                                                            translate>Total:</span>&nbsp;<span
+                                                            id="files_sd_status_total"></span></span>
+                                                    <span>&nbsp;|&nbsp;</span>
+                                                    <span><span translate>Used:</span>&nbsp;<span
+                                                            id="files_sd_status_used">
+                                                        </span></span><span>&nbsp;</span>
+                                                    <span class="noshowonlowres">|
+                                                        &nbsp;</span> <span
+                                                        class="form-inline">
+                                                        <div class="form-group"><span><span
+                                                                    translate>Ocupation:</span><meter
+                                                                    id="files_sd_status_occupation"
+                                                                    style="width:150px"
+                                                                    min="0"
+                                                                    max="100"
+                                                                    high="90"
+                                                                    value="50"></meter></span><span
+                                                                id="files_sd_status_percent"></span><span>%</span></div>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row hide_it"
+                                        id="files_status_sd_status">
+                                        <div class="col-md-12"><span
+                                                id="files_sd_status_msg">Ok</span></div>
+                                    </div>
+                                </div>
+                            </div>
                             <div id="controlPanel" style="display: flex;"
                                 class="panel panel-default panel-flex-col panel-min-width">
                                 <div class="panel-heading">
@@ -277,7 +599,7 @@
                                             class="col col-md-12 col-lg-7">
                                             <button style="margin-left: 15px" 
                                             onclick="menuHomeAll()" 
-                                            id="homeMachineButton">Home All</button>
+                                            id="homeMachineButton">Home All Axis</button>
                                             <svg
                                                 width="400" height="180"
                                                 xmlns="http://www.w3.org/2000/svg"
@@ -628,7 +950,7 @@
                                     <div class="position-container" style="display: flex; justify-content: space-between;"
                                         id="positions_labels">
 
-                                        <div id="position_text_header_container" style="display: block; padding-left: 18%; text-align: left;">
+                                        <div id="position_text_header_container" style="display: block; padding-left: 37%; text-align: left;">
                                             <h4 style="color: rgb(231, 228, 228); font:bold">Machine Origins:</h4>
                                             <div id="position_text_container" style="display: flex">
                                                 <div class="position_text">
@@ -701,10 +1023,10 @@
                                                     id="control_z_position_display">
                                                     <table>
                                                         <tr>
-                                                            <td><button
+                                                            <!-- <td><button
                                                                     class="btn btn-xs btn-default"
                                                                     id="zero_z_btn"
-                                                                    onclick="SendZerocommand('Z0')">&Oslash;</button></td>
+                                                                    onclick="SendZerocommand('Z0')">&Oslash;</button></td> -->
                                                             <td><span
                                                                     class="label label-default"
                                                                     style="padding:5px 5px 3px 5px"><span
@@ -712,7 +1034,7 @@
                                                                         id="control_z_position">&nbsp;</span></span></td>
                                                         </tr>
                                                         <tr id="control_zm_position_row">
-                                                            <td></td>
+                                                            <!-- <td></td> -->
                                                             <td>
                                                                 <table>
                                                                     <tr
@@ -732,12 +1054,12 @@
                                                 </div> 
                                             </div>
                                         </div>
-                                        <div id="pen-offset-container" style="padding-right: 18%; text-align: left;">
+                                        <!-- <div id="pen-offset-container" style="padding-right: 18%; text-align: left; display: none;">
                                             <h4 style="color: rgb(231, 228, 228); font:bold">Pen Offsets:</h4>
                                             <div id="pen-offset-div">
-                                                <!-- <button name="TEST" style="width:10px; height:15px"> 
+                                                <button name="TEST" style="width:10px; height:15px"> 
     
-                                                </button> -->
+                                                </button>
                                                 <label for="penDropdown" class="pen-dropdown">Choose a Pen:</label>
                                                     <select id="penDropdown" name="Pens">
                                                         <option value="Pen 1">Pen 1</option>
@@ -762,7 +1084,7 @@
                                                             onclick="SetOffsetCommandBT()">Set</button>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> -->
                                     </div><br>
                                     <div class="position-container hide_it"
                                         id="positions_labels2">
@@ -920,205 +1242,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <div id="filesPanel"
-                                class="panel panel-default panel-flex-col">
-                                <div class="panel-heading">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="pull-left">
-                                                <table>
-                                                    <tr>
-                                                        <td><b><span style="margin-left: 10px;"
-                                                                    id="fileSource"
-                                                                    translate>SD Files</span></b></td>
-                                                        <td>&nbsp;&nbsp;</td>
-                                                        <td class="tooltip"><span
-                                                                class="tooltip-text">Make
-                                                                a directory</span>
-                                                            <button
-                                                                id="files_createdir_btn"
-                                                                onclick="files_Createdir()"
-                                                                class="btn btn-info btn-xs"
-                                                                style><svg
-                                                                    width="1.5em"
-                                                                    height="1.2em"
-                                                                    viewBox="5 10 30 10">
-                                                                    <rect x="5"
-                                                                        y="10"
-                                                                        width="30"
-                                                                        height="20"
-                                                                        rx="2"
-                                                                        ry="2"
-                                                                        fill="currentColor"></rect>
-                                                                    <rect x="20"
-                                                                        y="5"
-                                                                        width="15"
-                                                                        height="15"
-                                                                        rx="2"
-                                                                        ry="2"
-                                                                        fill="currentColor"></rect><text
-                                                                        x="15"
-                                                                        y="25"
-                                                                        font-size="18"
-                                                                        font-weight="800"
-                                                                        fill="#5BC0DE">+</text>
-                                                                </svg></button>
-                                                        </td>
-                                                        <td>&nbsp;&nbsp;</td>
-                                                        <td><span
-                                                                id="files_currentPath"></span></td>
-                                                        <td>&nbsp;&nbsp;</td>
-                                                        <td>
-                                                            <div
-                                                                id="files_nav_loader"
-                                                                style="width:1em;height:1em"
-                                                                class="loader hide_it"></div>
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                            </div>
-                                            <div class="hide_it pull-right"
-                                                id="files_uploading_msg">
-                                                <table>
-                                                    <tr>
-                                                        <td><span translate>Uploading</span></td>
-                                                        <td>&nbsp;</td>
-                                                        <td><span
-                                                                class="text-info"
-                                                                id="files_currentUpload_msg"></span>
-                                                        </td>
-                                                        <td>&nbsp;</td>
-                                                        <td width="100px"><progress
-                                                                name="prg"
-                                                                id="files_prg"
-                                                                max="100"></progress></td>
-                                                        <td><span
-                                                                id="files_percent_upload"></span>%</td>
-                                                    </tr>
-                                                </table>
-                                            </div>
-                                            <div class="pull-right"
-                                                id="files_navigation_buttons">
-                                                <div class="item-flex-row-wrap">
-                                                    <div class="tooltip"><span
-                                                            class="tooltip-text">Show
-                                                            runnable files or
-                                                            all files</span>
-                                                        <button
-                                                            class="btn btn-xs btn-primary"
-                                                            onclick="files_filter_button(this);"><span
-                                                                id="files_filter_glyph"
-                                                                style="position:relative;top:2px"><svg
-                                                                    width="1.3em"
-                                                                    height="1.2em"
-                                                                    viewBox="0 0 1300 1200">
-                                                                    <g
-                                                                        transform="translate(50,1200) scale(1, -1)">
-                                                                        <path
-                                                                            fill="currentColor"
-                                                                            d="M150 1200h900q21 0 35.5 -14.5t14.5 -35.5t-14.5 -35.5t-35.5 -14.5h-900q-21 0 -35.5 14.5t-14.5 35.5t14.5 35.5t35.5 14.5zM700 500v-300l-200 -200v500l-350 500h900z">
-                                                                        </path>
-                                                                    </g>
-                                                                </svg></span></button>
-                                                    </div>&nbsp;
-                                                    <button
-                                                        class="btn btn-xs btn-primary hide_it"
-                                                        id="files_refresh_btn"
-                                                        onclick="files_refreshFiles(files_currentPath)"
-                                                        translate>Refresh</button>
-                                                    <button
-                                                        class="btn btn-xs btn-primary hide_it"
-                                                        id="files_refresh_primary_sd_btn"
-                                                        onclick="files_refreshFiles(primary_sd)">SD
-                                                        1</button> &nbsp;
-                                                    <button
-                                                        class="btn btn-xs btn-primary hide_it"
-                                                        id="files_refresh_secondary_sd_btn"
-                                                        onclick="files_refreshFiles(secondary_sd)">SD
-                                                        2</button> &nbsp; <span
-                                                        class="hide_it"
-                                                        id="files_refresh_printer_sd_btn"><button
-                                                            class="btn btn-xs btn-primary"
-                                                            onclick="current_source = printer_sd ;files_refreshFiles(files_currentPath)">SD</button>
-                                                        &nbsp; </span><span
-                                                        class="hide_it"
-                                                        id="files_refresh_tft_sd_btn"><button
-                                                            class="btn btn-xs btn-primary"
-                                                            onclick="current_source = tft_sd ;files_refreshFiles(files_currentPath)">TFT
-                                                            SD</button> &nbsp;
-                                                    </span><span class="hide_it"
-                                                        id="files_refresh_tft_usb_btn"><button
-                                                            class="btn btn-xs btn-primary"
-                                                            onclick="current_source = tft_usb ;files_refreshFiles(files_currentPath)">TFT
-                                                            USB</button> &nbsp;
-                                                    </span><button
-                                                        id="progress_btn"
-                                                        class="btn btn-xs btn-primary"
-                                                        onclick="files_progress()"
-                                                        translate>Progress</button>
-                                                    &nbsp; <button
-                                                        id="abort_btn"
-                                                        class="btn btn-xs btn-primary"
-                                                        onclick="files_abort()"
-                                                        translate>Abort</button>
-                                                    &nbsp; <button
-                                                        id="print_upload_btn"
-                                                        class="btn btn-xs btn-primary"
-                                                        onclick="files_select_upload()"
-                                                        translate>Upload</button>
-                                                    <input type="file"
-                                                        id="files_input_file"
-                                                        onchange="files_check_if_upload()"
-                                                        accept=" .g, .gco, .gcode, .G, .GCO, .GCODE"
-                                                        style="display:none">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="file-body"
-                                    class="panel-body panel-height panel-max-height panel-scroll panel-flex-main">
-                                    <div id="files_list_loader"
-                                        class="loader hide_it"
-                                        style="margin:auto"></div>
-                                    <ul class="list-group" id="files_fileList"></ul>
-                                </div>
-                                <div class="panel-footer panel-footer-height">
-                                    <div class="row hide_it"
-                                        id="files_space_sd_status">
-                                        <div class="col-md-12">
-                                            <div class="form-inline">
-                                                <div class="form-group"><span><span
-                                                            translate>Total:</span>&nbsp;<span
-                                                            id="files_sd_status_total"></span></span>
-                                                    <span>&nbsp;|&nbsp;</span>
-                                                    <span><span translate>Used:</span>&nbsp;<span
-                                                            id="files_sd_status_used">
-                                                        </span></span><span>&nbsp;</span>
-                                                    <span class="noshowonlowres">|
-                                                        &nbsp;</span> <span
-                                                        class="form-inline">
-                                                        <div class="form-group"><span><span
-                                                                    translate>Ocupation:</span><meter
-                                                                    id="files_sd_status_occupation"
-                                                                    style="width:150px"
-                                                                    min="0"
-                                                                    max="100"
-                                                                    high="90"
-                                                                    value="50"></meter></span><span
-                                                                id="files_sd_status_percent"></span><span>%</span></div>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row hide_it"
-                                        id="files_status_sd_status">
-                                        <div class="col-md-12"><span
-                                                id="files_sd_status_msg">Ok</span></div>
-                                    </div>
-                                </div>
-                            </div>
                         <div id="rssPanel"
                                 class="panel panel-default panel-flex-col">
                                 <div class="panel-heading">
@@ -1226,7 +1349,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div style="display: block;" id="grblPanel"
+                            <div style="display: none;" id="grblPanel"
                                 class="panel panel-default panel-flex-col panel-min-width">
                                 <div class="panel-heading">
                                     <div class="panel-flex-row">
@@ -1281,126 +1404,6 @@
                                 <div id="control-body"
                                     class="panel-body panel-flex-main">
                                     <div class="panel-flex-col">
-                                        <table width="100%">
-                                            <tr>
-                                                <td class="td_center">
-                                                    <table>
-                                                        <tr>
-                                                            <td><button
-                                                                    id="clear_status_btn"
-                                                                    class="btn btn-default btn-xs hide-it tooltip"
-                                                                    onclick="SendPrinterCommand('$X', true, null,null, 114, 1);"
-                                                                    style="padding:5px 5px 0 5px"><span
-                                                                        class="tooltip-text">Clear
-                                                                        Alarm</span>
-                                                                    <svg
-                                                                        width="2em"
-                                                                        height="1.8em"
-                                                                        viewBox="-200 -200 1700 1600">
-                                                                        <g
-                                                                            transform="translate(50,1200) scale(1, -1)">
-                                                                            <path
-                                                                                fill="black"
-                                                                                d="M553 1200h94q20 0 29 -10.5t3 -29.5l-18 -37q83 -19 144 -82.5t76 -140.5l63 -327l118 -173h17q19 0 33 -14.5t14 -35t-13 -40.5t-31 -27q-8 -4 -23 -9.5t-65 -19.5t-103 -25t-132.5 -20t-158.5 -9q-57 0 -115 5t-104 12t-88.5 15.5t-73.5 17.5t-54.5 16t-35.5 12l-11 4 q-18 8 -31 28t-13 40.5t14 35t33 14.5h17l118 173l63 327q15 77 76 140t144 83l-18 32q-6 19 3.5 32t28.5 13zM498 110q50 -6 102 -6q53 0 102 6q-12 -49 -39.5 -79.5t-62.5 -30.5t-63 30.5t-39 79.5z">
-                                                                            </path>
-                                                                            <circle
-                                                                                cx="600"
-                                                                                cy="600"
-                                                                                r="700"
-                                                                                stroke="red"
-                                                                                stroke-width="100"
-                                                                                fill="none"></circle>
-                                                                            <line
-                                                                                x1="106"
-                                                                                y1="106"
-                                                                                x2="1094"
-                                                                                y2="1094"
-                                                                                stroke="red"
-                                                                                stroke-width="100"></line>
-                                                                        </g>
-                                                                    </svg></button></td>
-                                                            <td
-                                                                style="text-align:left;width:100%;height:30px">
-                                                                <div
-                                                                    id="grbl_status"
-                                                                    class="status_text"></div>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td colspan="2"
-                                                                style="text-align:left;height:20px"
-                                                                id="grbl_status_text"></td>
-                                                        </tr>
-                                                    </table>
-                                                </td>
-                                                <td>
-                                                    <table>
-                                                        <tr>
-                                                            <td
-                                                                style="width:100%;height:2em"></td>
-                                                            <td><button
-                                                                    id="sd_pause_btn"
-                                                                    class="btn btn-default hide_it"
-                                                                    onclick="SendRealtimeCmd(0x21);"
-                                                                    style="padding:5px 4px 0 5px"><svg
-                                                                        width="2em"
-                                                                        height="1.4em"
-                                                                        viewBox="0 0 1300 1200">
-                                                                        <g
-                                                                            transform="translate(50,1200) scale(1, -1)">
-                                                                            <path
-                                                                                fill="blue"
-                                                                                d="M250 1000h200q21 0 35.5 -14.5t14.5 -35.5v-800q0 -21 -14.5 -35.5t-35.5 -14.5h-200q-21 0 -35.5 14.5t-14.5 35.5v800q0 21 14.5 35.5t35.5 14.5zM650 1000h200q21 0 35.5 -14.5t14.5 -35.5v-800q0 -21 -14.5 -35.5t-35.5 -14.5h-200q-21 0 -35.5 14.5t-14.5 35.5v800 q0 21 14.5 35.5t35.5 14.5z">
-                                                                            </path>
-                                                                        </g>
-                                                                    </svg></button></td>
-                                                            <td>&nbsp;</td>
-                                                            <td><button
-                                                                    id="sd_resume_btn"
-                                                                    class="btn btn-default hide_it"
-                                                                    onclick="SendRealtimeCmd(0x7e);"
-                                                                    style="padding:5px 4px 0 5px"><svg
-                                                                        width="2em"
-                                                                        height="1.4em"
-                                                                        viewBox="0 0 1300 1200">
-                                                                        <g
-                                                                            transform="translate(50,1200) scale(1, -1)">
-                                                                            <path
-                                                                                fill="green"
-                                                                                d="M243 1074l814 -498q18 -11 18 -26t-18 -26l-814 -498q-18 -11 -30.5 -4t-12.5 28v1000q0 21 12.5 28t30.5 -4z">
-                                                                            </path>
-                                                                        </g>
-                                                                    </svg></button></td>
-                                                            <td>&nbsp;</td>
-                                                            <td><button
-                                                                    id="sd_reset_btn"
-                                                                    class="btn btn-danger hide_it"
-                                                                    onclick="grbl_reset();"
-                                                                    style="padding:5px 0 0 0"><svg
-                                                                        width="2em"
-                                                                        height="1.4em"
-                                                                        viewBox="0 0 1200 1200">
-                                                                        <g
-                                                                            transform="translate(1200,1200) scale(-1, -1)">
-                                                                            <path
-                                                                                fill="white"
-                                                                                d="M947 1060l135 135q7 7 12.5 5t5.5 -13v-362q0 -10 -7.5 -17.5t-17.5 -7.5h-362q-11 0 -13 5.5t5 12.5l133 133q-109 76 -238 76q-116 0 -214.5 -57t-155.5 -155.5t-57 -214.5t57 -214.5t155.5 -155.5t214.5 -57t214.5 57t155.5 155.5t57 214.5h150q0 -117 -45.5 -224 t-123 -184.5t-184.5 -123t-224 -45.5t-224 45.5t-184.5 123t-123 184.5t-45.5 224t45.5 224t123 184.5t184.5 123t224 45.5q192 0 347 -117z">
-                                                                            </path>
-                                                                        </g>
-                                                                    </svg></button></td>
-                                                        </tr>
-                                                    </table>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="2"
-                                                    class="td_center">
-                                                    <center>
-                                                        <div id="grbl_SD_status"></div>
-                                                    </center>
-                                                </td>
-                                            </tr>
-                                        </table><br>
                                         <div class="tab" id="grbluitablinks"><button
                                                 class="tablinks"
                                                 onclick="opentab(event, 'grblcontroltab', 'grbluitabscontent', 'grbluitablinks')"
@@ -2216,7 +2219,7 @@
                 </div>
                 <div id="settingstab" class="tabcontent">
                     <center>
-                        <h2><span translate>FluidNC Settings</span></h2>
+                        <h2><span translate>Bantam Tools Pen Plotter Settings</span></h2>
                         <table>
                             <tr>
                                 <td style="padding:10px" class="tooltip"><span
@@ -2266,7 +2269,7 @@
                                             </g>
                                         </svg></button></td>
                                 <td style="padding:10px" class="tooltip"><span
-                                        class="tooltip-text">Restart FluidNC</span>
+                                        class="tooltip-text">Restart Bantam Tools Pen Plotter</span>
                                     <button type="button"
                                         id="settings_restart_btn"
                                         class="btn btn-danger"
@@ -2302,7 +2305,7 @@
                         <div class="loader hide_it" id="settings_loader"></div>
                         <div class="container hide_it"
                             id="settings_list_content"><span
-                                id="settings_filters">
+                                id="settings_filters" style="justify-content: center; display: flex; align-items: center; flex-wrap: wrap;">
                                 <div class="radio-inline tooltip"><span
                                         class="tooltip-text">Settings that are
                                         saved immediately</span> <label><input
@@ -2313,12 +2316,14 @@
                                 <div class="radio-inline tooltip"><span
                                         class="tooltip-text">Settings from the
                                         config file, saved only on command</span>
-                                    <label><input type="radio"
-                                            id="tree_setting_filter"
-                                            name="setting_filter"
-                                            value="configfile"
-                                            onclick="build_HTML_setting_list('tree')">
-                                        <span translate>Config Items</span></label>
+                                        <label>
+                                            <input type="radio" 
+                                                   id="tree_setting_filter" 
+                                                   name="setting_filter" 
+                                                   value="configfile" 
+                                                   onclick="confirmSelection()">
+                                            <span translate>Config Items</span>
+                                        </label>
                                 </div>
                             </span>
                             <table
@@ -3000,7 +3005,7 @@
                 <div class="modal-header"><span class="close"
                         onclick="closeSPIFFSDialog('cancel')"><b>&times;</b></span>
                     <h3>
-                        <div class="modal-title" translate>FluidNC Local
+                        <div class="modal-title" translate>Bantam Tools Pen Plotter Local
                             Filesystem</div>
                     </h3>
                 </div>
@@ -3121,7 +3126,7 @@
                 <div class="modal-header"><span class="close"
                         onclick="closeModal('cancel')"><b>&times;</b></span>
                     <h3>
-                        <div class="modal-title" translate>FluidNC Status</div>
+                        <div class="modal-title" translate>Bantam Tools Pen Plotter Status</div>
                     </h3>
                 </div>
                 <div class="modal-body">
@@ -3173,7 +3178,7 @@
                         onclick="closeUpdateDialog('cancel')"><b>&times;</b></span>
                     <h3>
                         <div class="modal-title" id="fw_update_dlg_title"
-                            translate>FluidNC Firmware Update</div>
+                            translate>Bantam Tools Pen Plotter Firmware Update</div>
                     </h3>
                 </div>
                 <div class="modal-body">
@@ -3836,7 +3841,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h3>
-                        <div class="modal-title" translate>Restarting FluidNC</div>
+                        <div class="modal-title" translate>Restarting Bantam Tools Pen Plotter</div>
                     </h3>
                 </div>
                 <div class="modal-body">
