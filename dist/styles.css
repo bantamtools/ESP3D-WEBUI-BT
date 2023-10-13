@@ -5385,7 +5385,7 @@ button.list-group-item-danger.active:hover {
 
 .panel {
     margin-bottom: 20px;
-    background-color: #555555;
+    background-color: #999999;
     border: 0px solid transparent;
     border-radius: 0px;
     -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
