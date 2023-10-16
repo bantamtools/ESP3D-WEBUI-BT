@@ -192,7 +192,7 @@ let jogStep; //Pull for jog commands distance
 
     function Set_page_title(e) { void 0 !== e && (esp_hostname = e), document.title = esp_hostname }
 
-    function initUI() { console.log("Init UI"), ESP3D_authentication && connectdlg(!1), console.log("Init UI post connectdlg(!1)"), AddCmd(display_boot_progress), "undefined" != typeof target_firmware && "undefined" != typeof web_ui_version && "undefined" != typeof direct_sd || alert("Missing init data!"), console.log("Pre update_UI_fw_targ"), update_UI_firmware_target(), console.log("Pre update_UI_fw_targ"), Set_page_title(), void 0 !== id("UI_VERSION") && (id("UI_VERSION").innerHTML = web_ui_version), void 0 !== id("FW_VERSION") && (id("FW_VERSION").innerHTML = fw_version), id("maintablink").click(), void 0 !== id("grblcontroltablink") && id("grblcontroltablink").click(), console.log("Pre initUI_2"),initUI_2() }
+    function initUI() { console.log("Init UI"), ESP3D_authentication && connectdlg(!1), console.log("Init UI post connectdlg(!1)"), AddCmd(display_boot_progress), "undefined" != typeof target_firmware && "undefined" != typeof web_ui_version && "undefined" != typeof direct_sd || alert("Missing init data!"), console.log("Pre update_UI_fw_targ"), update_UI_firmware_target(), console.log("Pre update_UI_fw_targ"), Set_page_title("BT Plotter"), void 0 !== id("UI_VERSION") && (id("UI_VERSION").innerHTML = web_ui_version), void 0 !== id("FW_VERSION") && (id("FW_VERSION").innerHTML = fw_version), id("maintablink").click(), void 0 !== id("grblcontroltablink") && id("grblcontroltablink").click(), console.log("Pre initUI_2"),initUI_2() }
 
     function initUI_2() { AddCmd(display_boot_progress), console.log("Get settings"), refreshSettings(!0), initUI_3() }
 
