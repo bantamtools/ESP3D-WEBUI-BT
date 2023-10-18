@@ -260,9 +260,13 @@ let jogStep; //Pull for jog commands distance
                 Monitor_output = Monitor_output.concat(e + "\n")
             } catch (e) { Monitor_output = Monitor_output.concat(t.toString() + "\n") } Monitor_output = Monitor_output.slice(-300)
 
-            // Trigger on RSS events
+            // Trigger RSS feed update on RSS events
             if (t.startsWith("[MSG:RSS")) {
                 rss_refreshFeed();
+            }
+            // Trigger SD file update on file download completed event
+            if (t.startsWith("[MSG:INFO: File download completed]")) {
+                files_refreshFiles(files_currentPath);
             }
         }
         var n, a = "",
