@@ -2740,7 +2740,7 @@ let jogStep; //Pull for jog commands distance
     var update_ongoing = !1,
         current_update_filename = "";
 
-    function updatedlg() { null != setactiveModal("updatedlg.html") && (id("fw_file_name").innerHTML = translate_text_item("No file chosen"), displayNone("prgfw"), displayNone("uploadfw-button"), id("updatemsg").innerHTML = "", id("fw-select").value = "", id("fw_update_dlg_title").innerHTML = translate_text_item("ESP3D Update").replace("ESP3D", "FluidNC"), showModal()) }
+    function updatedlg() { null != setactiveModal("updatedlg.html") && (id("fw_file_name").innerHTML = translate_text_item("No file chosen"), displayNone("prgfw"), displayNone("uploadfw-button"), id("updatemsg").innerHTML = "", id("fw-select").value = "", id("fw_update_dlg_title").innerHTML = translate_text_item("ESP3D Update").replace("ESP3D", "Bantam Tools Pen Plotter"), showModal()) }
 
     function closeUpdateDialog(e) { update_ongoing ? alertdlg(translate_text_item("Busy..."), translate_text_item("Update is ongoing, please wait and retry.")) : closeModal(e) }
 
