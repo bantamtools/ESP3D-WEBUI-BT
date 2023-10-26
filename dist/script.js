@@ -87,11 +87,9 @@ let jogStep; //Pull for jog commands distance
         null != a && (n = a.element.getElementsByClassName("modal-title")[0], a = a.element.getElementsByClassName("modal-text")[0], n.innerHTML = e, a.innerHTML = t, showModal())
     }
 
-    async function infodlg(e, t, n) {
+    function infodlg(e, t, n) {
         var a = setactiveModal("infodlg.html", n);
         null != a && (n = a.element.getElementsByClassName("modal-title")[0], a = a.element.getElementsByClassName("modal-text")[0], n.innerHTML = e, a.innerHTML = t, showModal())
-        await new Promise(r => setTimeout(r, 5000));
-        closeModal("ok");
     }
     var ESP3D_authentication = !1,
         page_id = "",
@@ -549,7 +547,7 @@ let jogStep; //Pull for jog commands distance
     function SendJogcommand(e, t) { 
 
         checkHomed();
-        if (homed == 0) { alertdlg(translate_text_item("Machine not homed"), translate_text_item("Please home your machine first")); return; }
+        if (homed == 0) { infodlg(translate_text_item("Machine not homed"), translate_text_item("Please home your machine first")); return; }
 
         if(jogStep === 'undefined') {
             console.log("jogStep is undefined. Select a jog distance."); 
@@ -708,7 +706,7 @@ let jogStep; //Pull for jog commands distance
 
     function files_check_and_run(e) {
         checkHomed();
-        if (homed == 0) { alertdlg(translate_text_item("Machine not homed"), translate_text_item("Please home your machine first")); return; }
+        if (homed == 0) { infodlg(translate_text_item("Machine not homed"), translate_text_item("Please home your machine first")); return; }
         SendPrinterCommand("$SD/Run=" + e)
     }
 
@@ -758,7 +756,7 @@ let jogStep; //Pull for jog commands distance
 
     var homed = 0;
     async function checkHomed(e) { 
-        Promise.resolve(SendGetHttp("/command?plain=" + encodeURIComponent("[ESP903]"), checkHomedSuccess));
+        SendGetHttp("/command?plain=" + encodeURIComponent("[ESP903]"), checkHomedSuccess);
     }
 
     function checkHomedSuccess(e) {
@@ -2475,7 +2473,7 @@ let jogStep; //Pull for jog commands distance
 
     function runGCode() { 
         checkHomed();
-        if (homed == 0) { alertdlg(translate_text_item("Machine not homed"), translate_text_item("Please home your machine first")); return; }
+        if (homed == 0) { infodlg(translate_text_item("Machine not homed"), translate_text_item("Please home your machine first")); return; }
         gCodeFilename && sendCommand("$sd/run=" + gCodeFilename), expandVisualizer()
     }
 
