@@ -546,7 +546,26 @@ let jogStep; //Pull for jog commands distance
         SendJogcommand(cmd, feedrate);
     }
 
-    function SendJogcommand(e, t) { if(jogStep === 'undefined') {console.log("jogStep is undefined. Select a jog distance."); return;} if (!id("lock_UI").checked) { var n, a = ""; if ("XYfeedrate" == t) { if ((a = parseInt(id("control_xy_velocity").value)) < 1 || isNaN(a) || null === a) return alertdlg(translate_text_item("Out of range"), translate_text_item("XY Feedrate value must be at least 1 mm/min!")), void(id("control_xy_velocity").value = preferenceslist[0].xy_feedrate) } else if ((a = parseInt(id("control_z_velocity").value)) < 1 || isNaN(a) || null === a) { var i = 3 < grblaxis ? "Axis" : "Z"; return alertdlg(translate_text_item("Out of range"), translate_text_item(i + " Feedrate value must be at least 1 mm/min!")), void(id("control_z_velocity").value = preferenceslist[0].z_feedrate) } 3 < grblaxis && (i = id("control_select_axis").value, e = e.replace("Z", i)), n = "$J=G91 G21 F" + a + " " + e, console.log(n), SendPrinterCommand(n, !0, get_Position) } }
+    function SendJogcommand(e, t) { 
+
+        checkHomed();
+        if (homed == 0) { alertdlg(translate_text_item("Machine not homed"), translate_text_item("Please home your machine first")); return; }
+
+        if(jogStep === 'undefined') {
+            console.log("jogStep is undefined. Select a jog distance."); 
+            return;
+        } 
+
+        if (!id("lock_UI").checked) {
+            var n, a = ""; 
+            if ("XYfeedrate" == t) { 
+                if ((a = parseInt(id("control_xy_velocity").value)) < 1 || isNaN(a) || null === a) return alertdlg(translate_text_item("Out of range"), translate_text_item("XY Feedrate value must be at least 1 mm/min!")), void(id("control_xy_velocity").value = preferenceslist[0].xy_feedrate) 
+            } else if ((a = parseInt(id("control_z_velocity").value)) < 1 || isNaN(a) || null === a) { 
+                var i = 3 < grblaxis ? "Axis" : "Z"; return alertdlg(translate_text_item("Out of range"), translate_text_item(i + " Feedrate value must be at least 1 mm/min!")), void(id("control_z_velocity").value = preferenceslist[0].z_feedrate) 
+            } 
+            3 < grblaxis && (i = id("control_select_axis").value, e = e.replace("Z", i)), n = "$J=G91 G21 F" + a + " " + e, console.log(n), SendPrinterCommand(n, !0, get_Position) 
+        }
+    }
 
     function confirmSelection() {
         var confirmation = window.confirm("Intended for Developer/Advanced Users Only");
@@ -685,7 +704,13 @@ let jogStep; //Pull for jog commands distance
         tabletSelectGCodeFile(t.name), tabletLoadGCodeFile(e, t.size), files_print_filename(e)
     }
 
-    function files_print_filename(e) { get_status(), "none" == reportType && tryAutoReport(), SendPrinterCommand("$SD/Run=" + e) }
+    function files_print_filename(e) { get_status(), "none" == reportType && tryAutoReport(), files_check_and_run(e) }
+
+    function files_check_and_run(e) {
+        checkHomed();
+        if (homed == 0) { alertdlg(translate_text_item("Machine not homed"), translate_text_item("Please home your machine first")); return; }
+        SendPrinterCommand("$SD/Run=" + e)
+    }
 
     function files_Createdir() { inputdlg(translate_text_item("Please enter directory name"), translate_text_item("Name:"), process_files_Createdir) }
 
@@ -729,6 +754,15 @@ let jogStep; //Pull for jog commands distance
     function files_refreshFiles(e, t) {
         var n = e;
         files_currentPath = e, current_source != last_source && (e = files_currentPath = "/", last_source = current_source), (current_source == tft_sd || current_source == tft_usb ? displayNone : displayBlock)("print_upload_btn"), void 0 === t && (t = !1), id("files_currentPath").innerHTML = files_currentPath, files_file_list = [], files_build_display_filelist(!(files_status_list = [])), displayBlock("files_list_loader"), displayBlock("files_nav_loader"), direct_sd && SendGetHttp("/upload?path=" + encodeURI(n), files_list_success, files_list_failed)
+    }
+
+    var homed = 0;
+    async function checkHomed(e) { 
+        Promise.resolve(SendGetHttp("/command?plain=" + encodeURIComponent("[ESP903]"), checkHomedSuccess));
+    }
+
+    function checkHomedSuccess(e) {
+        homed = e;
     }
 
     function rss_refreshFeed(e) { 
@@ -2439,7 +2473,11 @@ let jogStep; //Pull for jog commands distance
         n.scrollTop = e * a, i = e <= 0 ? (t = 0, 1) : (t = 1 == e ? 0 : nthLineEnd(i, e) + 1, i.indexOf("\n", t)), n.select(), n.setSelectionRange(t, i)
     }
 
-    function runGCode() { gCodeFilename && sendCommand("$sd/run=" + gCodeFilename), expandVisualizer() }
+    function runGCode() { 
+        checkHomed();
+        if (homed == 0) { alertdlg(translate_text_item("Machine not homed"), translate_text_item("Please home your machine first")); return; }
+        gCodeFilename && sendCommand("$sd/run=" + gCodeFilename), expandVisualizer()
+    }
 
     function tabletSelectGCodeFile(t) {
         var e = id("filelist");
