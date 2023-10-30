@@ -756,7 +756,11 @@ let jogStep; //Pull for jog commands distance
 
     var homed = 0;
     async function checkHomed(e) { 
-        SendGetHttp("/command?plain=" + encodeURIComponent("[ESP903]"), checkHomedSuccess);
+        console.log("Checking Homed");
+        SendGetHttp("/command?plain=" + encodeURIComponent("[ESP903]"), function() {
+            checkHomedSuccess();
+            console.log("Homed status after SendGetHttp:", homed);
+        });
     }
 
     function checkHomedSuccess(e) {
