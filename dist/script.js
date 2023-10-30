@@ -544,9 +544,9 @@ let jogStep; //Pull for jog commands distance
         SendJogcommand(cmd, feedrate);
     }
 
-    function SendJogcommand(e, t) { 
+    async function SendJogcommand(e, t) { 
 
-        checkHomed();
+        await checkHomed();
         if (homed == 0) { infodlg(translate_text_item("Machine not homed"), translate_text_item("Please home your machine first")); return; }
 
         if(jogStep === 'undefined') {
@@ -704,8 +704,8 @@ let jogStep; //Pull for jog commands distance
 
     function files_print_filename(e) { get_status(), "none" == reportType && tryAutoReport(), files_check_and_run(e) }
 
-    function files_check_and_run(e) {
-        checkHomed();
+    async function files_check_and_run(e) {
+        await checkHomed();
         if (homed == 0) { infodlg(translate_text_item("Machine not homed"), translate_text_item("Please home your machine first")); return; }
         SendPrinterCommand("$SD/Run=" + e)
     }
@@ -755,12 +755,21 @@ let jogStep; //Pull for jog commands distance
     }
 
     var homed = 0;
-    async function checkHomed(e) { 
+    function timer(ms) { return new Promise(res => setTimeout(res, ms)); }
+
+    async function checkHomed() { 
         console.log("Checking Homed");
-        SendGetHttp("/command?plain=" + encodeURIComponent("[ESP903]"), function() {
-            checkHomedSuccess();
-            console.log("Homed status after SendGetHttp:", homed);
-        });
+
+        // Clear homing value
+        homed = -1;
+
+        // Send GET request
+        SendGetHttp("/command?plain=" + encodeURIComponent("[ESP903]"), checkHomedSuccess);
+
+        // Wait for valid homed flag from GET response
+        while(homed < 0) {
+            await timer(100);
+        }
     }
 
     function checkHomedSuccess(e) {
@@ -2475,8 +2484,8 @@ let jogStep; //Pull for jog commands distance
         n.scrollTop = e * a, i = e <= 0 ? (t = 0, 1) : (t = 1 == e ? 0 : nthLineEnd(i, e) + 1, i.indexOf("\n", t)), n.select(), n.setSelectionRange(t, i)
     }
 
-    function runGCode() { 
-        checkHomed();
+    async function runGCode() { 
+        await checkHomed();
         if (homed == 0) { infodlg(translate_text_item("Machine not homed"), translate_text_item("Please home your machine first")); return; }
         gCodeFilename && sendCommand("$sd/run=" + gCodeFilename), expandVisualizer()
     }
