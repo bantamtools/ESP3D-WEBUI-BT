@@ -262,10 +262,11 @@ let jogStep; //Pull for jog commands distance
             if (t.startsWith("[MSG:RSS")) {
                 rss_refreshFeed();
             }
-            // Trigger SD file update on file download completed event
-            if (t.startsWith("[MSG:INFO: File download completed]")) {
+            // Trigger SD file update on file download completed event or mount/unmount
+            if (t.startsWith("[MSG:INFO: File download completed]") || t.startsWith("[MSG:INFO: Mount_sd]") || t.startsWith("[MSG:INFO: Unmount_sd]")) {
                 files_refreshFiles(files_currentPath);
             }
+
         }
         var n, a = "",
             i = id("monitor_enable_verbose_mode").checked;
